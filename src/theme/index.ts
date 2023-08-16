@@ -5,17 +5,17 @@ import { extendTheme } from "native-base";
  */
 
 const newColorTheme = {
-  test: {
-    50: "#E3F2F9",
-    100: "#C5E4F3",
-    200: "#A2D4EC",
-    300: "#7AC1E4",
-    400: "#47A9DA",
-    500: "#0088CC",
-    600: "#007AB8",
-    700: "#006BA1",
-    800: "#005885",
-    900: "#003F5E",
+  primary: {
+    50: "#FFFBF3",
+    100: "#FFECCC",
+    200: "#FFDDA7",
+    300: "#FFCE83",
+    400: "#FFBF60",
+    500: "#FCB03F",
+    600: "#F8A01E",
+    700: "#C77F14",
+    800: "#925D0B",
+    900: "#5C3B05",
   },
 };
 const appTheme = extendTheme({ colors: newColorTheme });

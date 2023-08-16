@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
-import Notification from "../screens/Notification";
-import Profile from "../screens/Profile";
+import Home from "../screens/tabs/Home";
+import Notification from "../screens/tabs/Notification";
+import Profile from "../screens/tabs/Profile/Profile";
 // import { BottomTabsParams } from "./types";
 
 const Tab = createBottomTabNavigator();

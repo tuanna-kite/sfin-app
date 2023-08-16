@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useAppDispatch } from "../store";
-import { removeUser } from "../store/user.reducer";
+import { useAppDispatch } from "../../store";
+import { removeUser } from "../../store/user.reducer";
 import { Button, Center } from "native-base";
 
 const Home = () => {
