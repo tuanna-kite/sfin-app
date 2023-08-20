@@ -7,4 +7,5 @@ export type BottomTabsParams = {
 export type AuthStackParams = {
   Login: undefined;
   SignUp: undefined;
+  ForgotPassword: undefined;
 };

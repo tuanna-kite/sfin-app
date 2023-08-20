@@ -5,7 +5,6 @@ import { Input } from "native-base";
 const Activities = () => {
   return (
     <View>
-      
       <Input variant={'underlined'} placeholder="Password" secureTextEntry={true}/>
     </View>
   );
