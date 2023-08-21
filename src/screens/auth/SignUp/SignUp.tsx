@@ -1,18 +1,30 @@
 import { Pressable, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../../navigations/config";
 import { Box, Button, Center, Column, Image, Text } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../../components/ui/UnderlinedInput";
 import PasswordInput from "../../../components/ui/PasswordInput";
-import PrimaryButton from "../../../components/ui/PrimaryButton";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "SignUp">;
 
 const SignUp = ({ navigation, route }: Props) => {
+  const [messageShown, setMessageShown] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passRetyped, setPassRetyped] = useState("");
+
   function onLogIn() {
     navigation.navigate("Login");
+  }
+  function onFillProfile() {
+    navigation.navigate("FillProfile");
+  }
+  function passChangeHandle(text:string){
+    setPassword(text);
+  }
+  function passRetypedHandle(text:string){
+    setPassRetyped(text);
   }
   return (
     <Box flex={1}>
@@ -39,8 +51,8 @@ const SignUp = ({ navigation, route }: Props) => {
           rounded={"3xl"}
           bg={"#FFFFFF"}
         >
-          <Center flex={1} >
-            <Column px={6} py={10} space={4} width={'100%'}>
+          <Center flex={1}>
+            <Column px={6} py={10} space={4} width={"100%"}>
               <Column space={1}>
                 <Text
                   fontSize={20}
@@ -52,18 +64,19 @@ const SignUp = ({ navigation, route }: Props) => {
                 </Text>
                 <Text fontSize={12}>Đăng ký để tiếp tục</Text>
               </Column>
-              <UnderlinedInput
-                placeholder={"Điện thoại"}
-                aboveText="Điện thoại"
-              />
+              <UnderlinedInput placeholder="Điện thoại" label="Điện thoại" />
               <Column space={4}>
-                <PasswordInput placeholder="Mật khẩu" aboveText="Mật khẩu" />
+                <PasswordInput placeholder="Mật khẩu" label="Mật khẩu" onChangeText={passChangeHandle}/>
                 <PasswordInput
                   placeholder="Nhập lại mật khẩu"
-                  aboveText="Nhập lại mật khẩu"
+                  label="Nhập lại mật khẩu"
+                  onChangeText={passRetypedHandle}
                 />
               </Column>
-              <PrimaryButton title="" text={"ĐĂNG KÝ"} />
+              <Button rounded={"lg"} color={"#F8A01E"} onPress={onFillProfile}>
+                ĐĂNG KÝ
+              </Button>
+              <Text color={'#DC2626'} fontSize={12} textAlign='center'>Mật khẩu không khớp</Text>
             </Column>
           </Center>
         </Box>

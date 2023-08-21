@@ -8,4 +8,6 @@ export type AuthStackParams = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
+  PhoneVerification: undefined;
+  FillProfile: undefined;
 };

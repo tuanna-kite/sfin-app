@@ -1,12 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import OTPInputView from "@twotalltotems/react-native-otp-input";
+import ClipBoard from "@react-native-community/clipboard";
 
 const PhoneVerification = () => {
-  return (
-    <View>
-      <Text>PhoneVerification</Text>
-    </View>
-  );
+  return <OTPInputView pinCount={4} style={{ width: "80%", height: 200 }} />;
 };
 
 export default PhoneVerification;

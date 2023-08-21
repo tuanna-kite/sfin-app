@@ -7,7 +7,6 @@ import { setUser } from "../../store/user.reducer";
 import { Box, Button, Center, Column, Text, Image } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
-import PrimaryButton from "../../components/ui/PrimaryButton";
 import PasswordInput from "../../components/ui/PasswordInput";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
@@ -88,12 +87,12 @@ const Login = ({ navigation }: Props) => {
               </Column>
               <UnderlinedInput
                 placeholder={"Điện thoại"}
-                aboveText="Điện thoại"
+                label="Điện thoại"
               />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
-                  aboveText="Mật khẩu"
+                  label="Mật khẩu"
                   value={password}
                   onChangeText={changePasswordHandler}
                 />
@@ -106,11 +105,7 @@ const Login = ({ navigation }: Props) => {
                   Quên mật khẩu?
                 </Button>
               </Column>
-              <PrimaryButton
-                title=""
-                text={"Đăng nhập"}
-                onPress={handleLogin}
-              />
+              <Button rounded={'lg'} color={'#F8A01E'} onPress={handleLogin}>ĐĂNG NHẬP</Button>
               {messageShown && (
                 <Text
                   textAlign={"center"}
