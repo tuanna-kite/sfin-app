@@ -1,13 +1,21 @@
 import { StyleSheet, TextInputProps, View } from "react-native";
 import React from "react";
-import { Column, FormControl, Input, Text } from "native-base";
+import { Box, Column, FormControl, Icon, Input, Text, } from "native-base";
 
 
-const PrimaryInput = (props:any) => {
+
+type PrimaryInputProps={
+  label?:string
+}& TextInputProps;
+
+const PrimaryInput = (props: PrimaryInputProps) => {
+  const {label,...primaryInputProps} = props;
   return (
     <FormControl>
       <FormControl.Label>{props.label}</FormControl.Label>
-      <Input variant='filled' shadow={1} placeholder={props.placeholder}/>
+      <Box shadow={2}  >
+        <Input variant="filled" {...primaryInputProps} />
+      </Box>
     </FormControl>
   );
 };

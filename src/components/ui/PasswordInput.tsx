@@ -3,13 +3,18 @@ import React, { useState } from "react";
 import { Column, FormControl, Icon, Input, Pressable, Text } from "native-base";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-const PasswordInput = (props: any) => {
+type PasswordInputProps={
+  label?:string
+}&TextInputProps
+
+const PasswordInput = (props: PasswordInputProps) => {
   const [shown, setShown] = useState(true);
+  const {label, ...passwordInputProps} = props;
   return (
     <FormControl>
       <FormControl.Label>{props.label}</FormControl.Label>
       <Input
-        placeholder={props.placeholder}
+        {...passwordInputProps}
         variant={"underlined"}
         size={"md"}
         type={shown ? "text" : "password"}

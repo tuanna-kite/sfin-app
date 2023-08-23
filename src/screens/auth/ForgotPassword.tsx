@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Center, Column, Text, Image, Button } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
@@ -9,12 +9,19 @@ import { AuthStackParams } from "../../navigations/config";
 type Props = {} & NativeStackScreenProps<AuthStackParams, "ForgotPassword">;
 
 const ForgotPassword = ({ navigation }: Props) => {
+  const [phone, setPhone] = useState("");
   function onSignUp() {
     navigation.navigate("SignUp");
   }
   function onVerification() {
     navigation.navigate("PhoneVerification");
+    console.log(phone);
+    
   }
+  function phoneHandler(text: string) {
+    setPhone(text);    
+  }
+  
   return (
     <Box flex={1}>
       <LinearGradient
@@ -64,12 +71,15 @@ const ForgotPassword = ({ navigation }: Props) => {
                   </Text>
                 </Column>
                 <UnderlinedInput
-                  placeholder={"Điện thoại"}
-                  aboveText="Điện thoại"
+                  onChangeText={phoneHandler}
+                  placeholder="Điện thoại"
+                  label="Điện thoại"
                   style={styles.phoneBox}
                 />
               </Column>
-              <Button rounded={'lg'} color={'#F8A01E'} onPress={onVerification}>TIẾP TỤC</Button>
+              <Button rounded={"lg"} color={"#F8A01E"} onPress={onVerification}>
+                TIẾP TỤC
+              </Button>
             </Column>
           </Center>
         </Box>
