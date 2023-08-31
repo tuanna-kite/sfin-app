@@ -17,13 +17,14 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
 import PasswordInput from "../../components/ui/PasswordInput";
+import { onLog } from "firebase/app";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
   const [messageShown, setMessageShown] = useState(false);
   const [password, setPassword] = useState("");
-  const realPassword = "bbb";
+  const realPassword = "";
 
   function changePasswordHandler(text: string) {
     setPassword(text);
@@ -33,6 +34,7 @@ const Login = ({ navigation }: Props) => {
   function handleLogin() {
     if (password === realPassword) {
       setMessageShown(false);
+      onLoggedIn();
     } else {
       setMessageShown(true); // Show error message when password is wrong
     }
