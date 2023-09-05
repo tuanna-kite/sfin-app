@@ -4,18 +4,27 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../navigations/config";
 import { useAppDispatch } from "../../store";
 import { setUser } from "../../store/user.reducer";
-import { Box, Button, Center, Column, Text, Image } from "native-base";
+import {
+  Box,
+  Button,
+  Center,
+  Column,
+  Text,
+  Image,
+  Stack,
+  Row,
+} from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
-import PrimaryButton from "../../components/ui/PrimaryButton";
 import PasswordInput from "../../components/ui/PasswordInput";
+import { onLog } from "firebase/app";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
   const [messageShown, setMessageShown] = useState(false);
   const [password, setPassword] = useState("");
-  const realPassword = "aaa";
+  const realPassword = "";
 
   function changePasswordHandler(text: string) {
     setPassword(text);
@@ -24,7 +33,8 @@ const Login = ({ navigation }: Props) => {
 
   function handleLogin() {
     if (password === realPassword) {
-      onSignUp();
+      setMessageShown(false);
+      onLoggedIn();
     } else {
       setMessageShown(true); // Show error message when password is wrong
     }
@@ -43,36 +53,21 @@ const Login = ({ navigation }: Props) => {
     dispatch(setUser());
   }
   return (
-    // <View>
-    //   <Text>Login</Text>
-    //   <Button onPress={onSignUp}>Sign Up</Button>
-    //   <Button onPress={onLoggedIn}>Login</Button>
-
-    // </View>
-    <Box flex={1}>
-      <LinearGradient
-        colors={["#F4762D", "#FCB03F"]}
-        style={styles.gradient}
-      ></LinearGradient>
-      <Image
-        source={require("../../../assets/sfin-logo.png")}
-        alt="SFin logo"
-        position={"absolute"}
-        style={styles.appLogo}
-      ></Image>
-      <Center
-        flex={1}
-        zIndex={2}
-        position={"absolute"}
-        style={styles.centerBox}
-      >
-        <Box
-          width={311}
-          height={424}
-          borderWidth={1}
-          rounded={"3xl"}
-          bg={"#FFFFFF"}
-        >
+    <>
+      <Stack position="absolute" w="100%" h="100%">
+        <Box flex={1}>
+          <LinearGradient
+            colors={["#F4762D", "#FCB03F"]}
+            style={styles.gradient}
+          >
+            <Box zIndex={2}>
+              <Image alt="" source={require("../../../assets/sfin-logo.png")}></Image>
+            </Box>
+          </LinearGradient>
+        </Box>
+      </Stack>
+      <Center zIndex={2} w="100%" h="100%" mt={120}>
+        <Box width={311} height={424} rounded="3xl" bg="#FFFFFF">
           <Center flex={1}>
             <Column px={6} py={10} space={4} flex={1} width="100%">
               <Column space={1}>
@@ -80,42 +75,36 @@ const Login = ({ navigation }: Props) => {
                   fontSize={20}
                   fontWeight={700}
                   lineHeight={25}
-                  color={"#F8A01E"}
+                  color="#F8A01E"
                 >
                   Xin chào,
                 </Text>
                 <Text fontSize={12}>Đăng nhập để tiếp tục</Text>
               </Column>
-              <UnderlinedInput
-                placeholder={"Điện thoại"}
-                aboveText="Điện thoại"
-              />
+              <UnderlinedInput placeholder="Điện thoại" label="Điện thoại" />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
-                  aboveText="Mật khẩu"
+                  label="Mật khẩu"
                   value={password}
                   onChangeText={changePasswordHandler}
                 />
-                <Button
-                  onPress={onForgotPasword}
-                  right={"3/4"}
-                  variant={"link"}
-                  _text={{ color: "#9CA3AF", fontSize: 12 }}
-                >
-                  Quên mật khẩu?
-                </Button>
+                <Row>
+                  <Button
+                    onPress={onForgotPasword}
+                    variant="link"
+                    _text={{ color: "#9CA3AF", fontSize: 12 }}
+                  >
+                    Quên mật khẩu?
+                  </Button>
+                </Row>
               </Column>
-              <PrimaryButton
-                title=""
-                text={"Đăng nhập"}
-                onPress={handleLogin}
-              />
+              <Button rounded="lg" color="#F8A01E" onPress={handleLogin}>ĐĂNG NHẬP</Button>
               {messageShown && (
                 <Text
-                  textAlign={"center"}
+                  textAlign="center"
                   fontSize={12}
-                  color={"#DC2626"}
+                  color="#DC2626"
                   fontWeight={400}
                 >
                   Tài khoản hoặc mật khẩu chưa đúng
@@ -124,24 +113,22 @@ const Login = ({ navigation }: Props) => {
             </Column>
           </Center>
         </Box>
-      </Center>
-      <Center zIndex={2} style={styles.registerContainer} position={"absolute"}>
-        <Column>
+        <Column mt={10}>
           <Text color={"#6B7280"} fontSize={12}>
             Bạn chưa có tài khoản?
           </Text>
           <Button
             _text={{ underline: true }}
-            variant={"link"}
+            variant="link"
             fontSize={12}
-            textDecorationLine={"underline"}
+            textDecorationLine="underline"
             onPress={onSignUp}
           >
             ĐĂNG KÝ
           </Button>
         </Column>
       </Center>
-    </Box>
+    </>
   );
 };
 
@@ -149,21 +136,10 @@ export default Login;
 
 const styles = StyleSheet.create({
   gradient: {
-    flex: 1,
-    position: "relative",
-    maxHeight: 381,
-    borderRadius: 32,
-  },
-  centerBox: {
-    marginTop: 270,
-    marginLeft: 45,
-  },
-  appLogo: {
-    margin: 120,
-  },
-  registerContainer: {
-    marginTop: 700,
-    marginLeft: 120,
-    paddingTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    height: "45%",
   },
 });

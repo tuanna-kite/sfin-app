@@ -1,23 +1,24 @@
 import { StyleSheet, TextInputProps, View } from "react-native";
 import React from "react";
-import { Column, Input, Text } from "native-base";
+import { Column, FormControl, Input, Text } from "native-base";
 
-type InputProps = {
-  aboveText?: string;
+type UnderlinedInputProps = {
+  label?: string;
 } & TextInputProps;
 
-const UnderlinedInput = (props: InputProps) => {
-  const { aboveText, ...inputProps } = props;
+const UnderlinedInput = (props: UnderlinedInputProps) => {
+  const { label, ...inputProps } = props;
   return (
-    <Column>
-      {aboveText && <Text fontSize={12} {...inputProps}>{aboveText}</Text>}
+    <FormControl>
+      <FormControl.Label>{label}</FormControl.Label>
       <Input
+        {...inputProps}
         variant={"underlined"}
         size={"md"}
-        type="password"
-        placeholder={aboveText}
+        type="text"
+        placeholder={props.placeholder}
       ></Input>
-    </Column>
+    </FormControl>
   );
 };
 

@@ -1,20 +1,20 @@
 import { StyleSheet, TextInputProps, View } from "react-native";
 import React, { useState } from "react";
-import { Column, Icon, Input, Pressable, Text } from "native-base";
+import { Column, FormControl, Icon, Input, Pressable, Text } from "native-base";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-type InputProps = {
-  aboveText?: string;
-} & TextInputProps;
+type PasswordInputProps={
+  label?:string
+}&TextInputProps
 
-const PasswordInput = (props: InputProps) => {
+const PasswordInput = (props: PasswordInputProps) => {
   const [shown, setShown] = useState(true);
-  const { aboveText, ...inputProps } = props;
+  const {label, ...passwordInputProps} = props;
   return (
-    <Column>
-      {aboveText && <Text fontSize={12}>{aboveText}</Text>}
+    <FormControl>
+      <FormControl.Label>{props.label}</FormControl.Label>
       <Input
-        {...inputProps}
+        {...passwordInputProps}
         variant={"underlined"}
         size={"md"}
         type={shown ? "text" : "password"}
@@ -31,7 +31,7 @@ const PasswordInput = (props: InputProps) => {
           </Pressable>
         }
       ></Input>
-    </Column>
+    </FormControl>
   );
 };
 

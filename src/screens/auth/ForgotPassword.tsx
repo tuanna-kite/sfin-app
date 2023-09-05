@@ -1,18 +1,27 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Center, Column, Text, Image, Button } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
-import PrimaryButton from "../../components/ui/PrimaryButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../navigations/config";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "ForgotPassword">;
 
 const ForgotPassword = ({ navigation }: Props) => {
+  const [phone, setPhone] = useState("");
   function onSignUp() {
     navigation.navigate("SignUp");
   }
+  function onVerification() {
+    navigation.navigate("PhoneVerification");
+    console.log(phone);
+    
+  }
+  function phoneHandler(text: string) {
+    setPhone(text);    
+  }
+  
   return (
     <Box flex={1}>
       <LinearGradient
@@ -39,7 +48,14 @@ const ForgotPassword = ({ navigation }: Props) => {
           bg={"#FFFFFF"}
         >
           <Center flex={1}>
-            <Column px={6} py={10} space={4} flex={1} width="100%" justifyContent={'space-between'}>
+            <Column
+              px={6}
+              py={10}
+              space={4}
+              flex={1}
+              width="100%"
+              justifyContent={"space-between"}
+            >
               <Column>
                 <Column space={1}>
                   <Text
@@ -55,12 +71,15 @@ const ForgotPassword = ({ navigation }: Props) => {
                   </Text>
                 </Column>
                 <UnderlinedInput
-                  placeholder={"Điện thoại"}
-                  aboveText="Điện thoại"
+                  onChangeText={phoneHandler}
+                  placeholder="Điện thoại"
+                  label="Điện thoại"
                   style={styles.phoneBox}
                 />
               </Column>
-              <PrimaryButton title="" text={"ĐẶT LẠI MẬT KHẨU"} />
+              <Button rounded={"lg"} color={"#F8A01E"} onPress={onVerification}>
+                TIẾP TỤC
+              </Button>
             </Column>
           </Center>
         </Box>
