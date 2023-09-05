@@ -6,12 +6,13 @@ import { Box, Column, FormControl, Icon, Input, Text, } from "native-base";
 
 type PrimaryInputProps={
   label?:string
+  my?:number
 }& TextInputProps;
 
 const PrimaryInput = (props: PrimaryInputProps) => {
-  const {label,...primaryInputProps} = props;
+  const {label,my,...primaryInputProps} = props;
   return (
-    <FormControl>
+    <FormControl my={my}>
       <FormControl.Label>{props.label}</FormControl.Label>
       <Box shadow={2}  >
         <Input variant="filled" {...primaryInputProps} />

@@ -11,16 +11,21 @@ import {
   Row,
   Icon,
   Image,
+  IStackProps,
+  Pressable,
 } from "native-base";
 import HeaderBackground from "../../components/ui/HeaderBackground";
-import { MaterialIcons } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParams } from "../../navigations/config";
 
 type PackageTagProps = {
+  id:string;
   packageName: string;
   paid: boolean;
   startDate: string;
   endDate?: string;
-};
+  _stack: IStackProps;
+}& NativeStackScreenProps<RootStackParams, "Activities">;
 
 const data = [
   {
@@ -74,54 +79,60 @@ const data = [
 ];
 
 const PackageTag = (props: PackageTagProps) => {
-  const { packageName, paid, startDate, endDate } = props;
+  const { packageName, paid, startDate, endDate, _stack } = props;
+  // function toPaymentScreen(){
+  //   navigation.navigate('Payment')
+  // }
+  // function onPaying(){
+  //   if (paid){
+  //     toPaymentScreen();
+  //   }
+  // }
   return (
-    <Center w="100%" h="20%" bg="#F3F4F6" shadow={2} rounded="3xl">
-      <Box flex={1} w="100%">
-        <Center flex={1}>
-          <Row justifyContent="space-between" w="85%">
+      <Column my={3} bg="#F3F4F6" shadow={2} rounded="3xl" {..._stack}>
+        <Row justifyContent="space-between" p={5}>
+          <Text
+            color="#F8A01E"
+            fontSize={20}
+            fontWeight={700}
+            textAlign="center"
+          >
+            {packageName}
+          </Text>
+          <Text
+            color={!paid ? "#DC2626" : "#16A34A"}
+            fontSize={10}
+            fontWeight={500}
+            textAlign="center"
+          >
+            {!paid ? "Chưa thanh toán" : "Đã thanh toán"}
+          </Text>
+        </Row>
+
+        <Divider></Divider>
+
+        <Row justifyContent="space-between" p={5}>
+          <Image source={require("../../../assets/credit-card.png")} alt="" />
+          <Row>
             <Text
-              color="#F8A01E"
-              fontSize={20}
-              fontWeight={700}
-              textAlign="center"
-            >
-              {packageName}
-            </Text>
-            <Text
-              color={!paid ? "#DC2626" : "#16A34A"}
+              color="#6B7280"
               fontSize={10}
               fontWeight={500}
               textAlign="center"
             >
-              {!paid ? "Chưa thanh toán" : "Đã thanh toán"}
-            </Text>
-          </Row>
-        </Center>
-      </Box>
-      <Divider></Divider>
-      <Box flex={1} w="100%">
-        <Center flex={1}>
-          <Row justifyContent="space-between" w="85%">
-            <Image source={require("../../../assets/credit-card.png")} alt="" />
-            <Row>
               <Text
                 color="#6B7280"
                 fontSize={10}
                 fontWeight={500}
                 textAlign="center"
               >
-                <Text
-                  color="#6B7280"
-                  fontSize={10}
-                  fontWeight={500}
-                  textAlign="center"
-                >
-                  Vay
-                </Text>
-                {startDate}
+                Vay
               </Text>
-              {paid && (
+              {startDate}
+            </Text>
+            {paid && (
+              <>
+                <Divider orientation="vertical" mx={2}></Divider>
                 <Text
                   color="#6B7280"
                   fontSize={10}
@@ -138,28 +149,29 @@ const PackageTag = (props: PackageTagProps) => {
                   </Text>
                   {endDate}
                 </Text>
-              )}
-            </Row>
+              </>
+            )}
           </Row>
-        </Center>
-      </Box>
-    </Center>
+        </Row>
+      </Column>
   );
 };
 
 const Activities = () => {
-  const renderPackageTag: ListRenderItem<PackageTagProps>=({item})=>{
-    return <PackageTag {...item} />
-  }
+  const renderPackageTag: ListRenderItem<PackageTagProps> = ({ item }) => {
+    return <PackageTag {...item} />;
+  };
   return (
     <>
       <HeaderBackground text="Hoạt động"></HeaderBackground>
-      <Column bg={"amber.100"} flex={1} mx={5} mt={10}>
-        <FlatList
-          data={data}
-          renderItem={renderPackageTag}
-        />
-      </Column>
+      <FlatList
+        flex={1}
+        mx={5}
+        mt={7}
+        data={data}
+        renderItem={renderPackageTag}
+        keyExtractor={(item)=> item.id}
+      />
     </>
   );
 };

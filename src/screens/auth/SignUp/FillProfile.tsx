@@ -32,7 +32,7 @@ const FillProfile = (props:ViewProps) => {
   function dateShownHandler() {
     setDateShown(!dateShown);
   }
-  function onChangeDate({ type }:string, selectedDate: Date) {
+  function onChangeDate({ type }, selectedDate: Date) {
     if (type == "set") {
       const currentDate = selectedDate;
       setDate(currentDate);

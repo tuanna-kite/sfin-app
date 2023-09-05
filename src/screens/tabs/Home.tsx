@@ -17,11 +17,23 @@ import {
 } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParams } from "../../navigations/config";
 
-const Home = () => {
+type Props = {} & NativeStackScreenProps<RootStackParams, "Home">;
+
+const Home = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const [chosen, setChosen] = useState(false);
   const [messageShown, setMessageShown] = useState(false);
+
+  function onPayment() {
+    navigation.navigate("Payment");
+  }
+
+  function onLoanRequest() {
+    navigation.navigate("LoanRequest");
+  }
 
   function choosePackageHandler() {
     setChosen(true);
@@ -31,6 +43,8 @@ const Home = () => {
   function showMessageHandler() {
     if (!chosen) {
       setMessageShown(true);
+    } else {
+      onLoanRequest();
     }
   }
 
@@ -69,10 +83,12 @@ const Home = () => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
-                <Icon
-                  as={<MaterialIcons name="arrow-forward" />}
-                  size={6}
-                ></Icon>
+                <Pressable onPress={onPayment}>
+                  <Icon
+                    as={<MaterialIcons name="arrow-forward" />}
+                    size={6}
+                  ></Icon>
+                </Pressable>
               </Row>
             </Center>
           </Box>
@@ -156,7 +172,7 @@ const Home = () => {
             </Center>
           </Row>
         </Column>
-        <Center w='100%' h={10} >
+        <Center w="100%" h={10}>
           {messageShown && (
             <Text color="#DC2626" fontSize={12} textAlign="center" my={3}>
               Bạn vui lòng chọn gói vay theo nhu cầu

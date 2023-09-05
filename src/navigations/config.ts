@@ -11,3 +11,21 @@ export type AuthStackParams = {
   PhoneVerification: undefined;
   FillProfile: undefined;
 };
+
+export type RootStackParams = {
+  Auth:undefined;
+  Activities:undefined;
+  ChangePassword:undefined;
+  EditProfile:undefined;
+  Home:undefined;
+  LoanRequest:undefined;
+  Notifications:undefined;
+  Payment:undefined;
+  Profile:undefined;
+  ProfileVerification: undefined;
+  TabNav:undefined;
+}
+  
+  
+  
+  
