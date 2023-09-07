@@ -1,21 +1,20 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
+import {getFirestore } from "firebase/firestore";
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBx9M6oNdeSFAaBZflihhzGbXb1O5m-QFk",
-  authDomain: "react-native-practice-f525b.firebaseapp.com",
-  databaseURL:
-    "https://react-native-practice-f525b-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "react-native-practice-f525b",
-  storageBucket: "react-native-practice-f525b.appspot.com",
-  messagingSenderId: "1034330057839",
-  appId: "1:1034330057839:web:84e47887fa2869f8a8719a",
-  measurementId: "G-VKR2LN8QNC",
+  apiKey: "AIzaSyBthVISrR7ZXO4Vu56gGyHAWHG1kzXJwow",
+  authDomain: "practice-d2619.firebaseapp.com",
+  projectId: "practice-d2619",
+  storageBucket: "practice-d2619.appspot.com",
+  messagingSenderId: "912870007169",
+  appId: "1:912870007169:web:a23edf1908b73c06004880",
+  measurementId: "G-Z8YVX8MJ2B",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
+export const firebaseDb = getFirestore(firebaseApp);
 export default firebaseApp;
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase

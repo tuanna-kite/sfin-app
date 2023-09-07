@@ -4,10 +4,15 @@ import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { Box, Button, Center, Column, Text, View } from "native-base";
 import FillProfile from "./SignUp/FillProfile";
 import ResetPassword from "./ResetPassword";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AuthStackParams } from "../../navigations/config";
 
-const PhoneVerification = () => {
+type Props = {} & NativeStackScreenProps<AuthStackParams, "PhoneVerification">;
+
+const PhoneVerification = ({ navigation, route }: Props) => {
   const [showResetPassword, setShowResetPassword] = useState(false);
   const realOTP = "1234";
+  const phone = route.params.phone;
 
   function OTPVerifyHandler(code: string) {
     if (code === realOTP) {
@@ -24,7 +29,7 @@ const PhoneVerification = () => {
               Mã xác thực OTP đã được gửi tới
             </Text>
             <Text textAlign="center" fontWeight={700} fontSize={16}>
-              SĐT 0345xxx467
+              {phone}
             </Text>
             <OTPInputView
               selectionColor="#03DAC6"

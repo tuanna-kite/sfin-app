@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UserProfile } from "../types/user";
 
 type UserState = {
@@ -13,8 +13,12 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state) => {
-      state.user = { email: "admin@gmail.com" };
+    setUser: (state, actions: PayloadAction<UserProfile>) => {
+      const {payload} = actions;
+      state.user = {
+        phone: payload.phone,
+        password: payload.password,
+      };
     },
     removeUser: (state) => {
       state.user = null;

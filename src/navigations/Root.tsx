@@ -32,14 +32,10 @@ const Root = () => {
         >
           {!user && <Stack.Screen name="Auth" component={AuthStack} />}
           {user && <Stack.Screen name="TabNav" component={TabNav} />}
-          <Stack.Screen name="Home" component={Home}/>
-          <Stack.Screen name="Activities" component={Activities}/>
           <Stack.Screen name="ChangePassword" component={ChangePassword}/>
-          <Stack.Screen name="Profile" component={Profile}/>
           <Stack.Screen name="EditProfile" component={EditProfile} />
           <Stack.Screen name="ProfileVerification" component={ProfileVerification}/>
           <Stack.Screen name="LoanRequest" component={LoanRequest}/>
-          <Stack.Screen name="Notifications" component={Notification}/>
           <Stack.Screen name="Payment" component={Payment}/>
         </Stack.Navigator>
       </NavigationContainer>

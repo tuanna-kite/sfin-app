@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { removeUser } from "../../store/user.reducer";
 import {
   Box,
@@ -13,19 +13,25 @@ import {
   Row,
   Text,
   Pressable,
-  FormControl,
 } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParams } from "../../navigations/config";
+import { BottomTabsParams, RootStackParams } from "../../navigations/config";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps } from "@react-navigation/native";
 
-type Props = {} & NativeStackScreenProps<RootStackParams, "Home">;
+type Props = {} & CompositeScreenProps<
+  BottomTabScreenProps<BottomTabsParams, "Home">,
+  NativeStackScreenProps<RootStackParams, "TabNav">
+>;
 
 const Home = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const [chosen, setChosen] = useState(false);
   const [messageShown, setMessageShown] = useState(false);
+
+  const { user } = useAppSelector((state) => state.user);
 
   function onPayment() {
     navigation.navigate("Payment");

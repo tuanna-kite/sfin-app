@@ -15,10 +15,19 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParams } from "../../../navigations/config";
+import { useAppDispatch } from "../../../store";
+import { removeUser } from "../../../store/user.reducer";
 
 type Props = {} & NativeStackScreenProps<RootStackParams, "Profile">;
 
 const Profile = ({ navigation }: Props) => {
+
+  const dispatch = useAppDispatch();
+
+  function onLoggedOut(){
+    dispatch(removeUser());
+  }
+
   function onProfileVerify() {
     navigation.navigate("ProfileVerification");
   }
@@ -34,7 +43,7 @@ const Profile = ({ navigation }: Props) => {
       <Column px={5} mb={5} flex={1} justifyContent="space-between">
         <Box>
           <Row space={"7"} my={7}>
-            <Image source={require("../../../../assets/avatar.png")} />
+            <Image alt="" source={require("../../../../assets/avatar.png")} />
             <Column>
               <Text fontWeight={500} fontSize={16}>
                 Jordyn Calzoni
@@ -92,7 +101,7 @@ const Profile = ({ navigation }: Props) => {
             </Pressable>
           </Column>
         </Box>
-        <Button>Đăng xuất</Button>
+        <Button onPress={onLoggedOut}>Đăng xuất</Button>
       </Column>
     </>
   );

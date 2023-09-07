@@ -18,12 +18,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
 import PasswordInput from "../../components/ui/PasswordInput";
 import { onLog } from "firebase/app";
+import { firebaseDb } from "../../firebase";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
   const [messageShown, setMessageShown] = useState(false);
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const realPassword = "";
 
   function changePasswordHandler(text: string) {
@@ -50,7 +52,7 @@ const Login = ({ navigation }: Props) => {
     navigation.navigate("SignUp");
   }
   function onLoggedIn() {
-    dispatch(setUser());
+    dispatch(setUser({phone,password}));
   }
   return (
     <>
@@ -61,7 +63,10 @@ const Login = ({ navigation }: Props) => {
             style={styles.gradient}
           >
             <Box zIndex={2}>
-              <Image alt="" source={require("../../../assets/sfin-logo.png")}></Image>
+              <Image
+                alt=""
+                source={require("../../../assets/sfin-logo.png")}
+              ></Image>
             </Box>
           </LinearGradient>
         </Box>
@@ -81,7 +86,7 @@ const Login = ({ navigation }: Props) => {
                 </Text>
                 <Text fontSize={12}>Đăng nhập để tiếp tục</Text>
               </Column>
-              <UnderlinedInput placeholder="Điện thoại" label="Điện thoại" />
+              <UnderlinedInput placeholder="Điện thoại" label="Điện thoại" onChangeText={setPhone}/>
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
@@ -99,7 +104,9 @@ const Login = ({ navigation }: Props) => {
                   </Button>
                 </Row>
               </Column>
-              <Button rounded="lg" color="#F8A01E" onPress={handleLogin}>ĐĂNG NHẬP</Button>
+              <Button rounded="lg" color="#F8A01E" onPress={handleLogin}>
+                ĐĂNG NHẬP
+              </Button>
               {messageShown && (
                 <Text
                   textAlign="center"
