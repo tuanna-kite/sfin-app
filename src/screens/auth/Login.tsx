@@ -78,7 +78,7 @@ const Login = ({ navigation }: Props) => {
               <Column space={1}>
                 <Text
                   fontSize={20}
-                  fontWeight={700}
+                  fontWeight="bold"
                   lineHeight={25}
                   color="#F8A01E"
                 >

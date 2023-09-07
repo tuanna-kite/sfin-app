@@ -18,7 +18,7 @@ import { RootStackParams } from "../../../navigations/config";
 import { useAppDispatch } from "../../../store";
 import { removeUser } from "../../../store/user.reducer";
 
-type Props = {} & NativeStackScreenProps<RootStackParams, "Profile">;
+type Props = {} & NativeStackScreenProps<RootStackParams, "Profile">; // TODO: Change to BottomTabs 
 
 const Profile = ({ navigation }: Props) => {
 

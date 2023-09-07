@@ -27,7 +27,7 @@ export type RootStackParams = {
   Payment:undefined;
   Profile:undefined;
   ProfileVerification: undefined;
-  TabNav: NavigatorScreenParams<BottomTabsParams>;
+  TabNav: undefined;
 }
   
   

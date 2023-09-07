@@ -44,8 +44,8 @@ const Payment = () => {
               >
                 Họ và tên (0345622467)
               </Text>
-              <Center bg="white" mx={"12"} p={7} rounded={"2xl"}>
-                <Image source={require("../../assets/qr-code.png")} alt="" />
+              <Center bg="white" mx={"12"} p="4" rounded={"2xl"}>
+                <Image source={require("../../assets/qr-code.png")} alt="qr" size="lg" />
               </Center>
               <Text fontSize={10} color="white" pt={2}>
                 Quét để chuyển tiền

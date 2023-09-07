@@ -1,7 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { removeUser } from "../../store/user.reducer";
 import {
   Box,
   Button,
@@ -21,9 +20,9 @@ import { BottomTabsParams, RootStackParams } from "../../navigations/config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 
-type Props = {} & CompositeScreenProps<
-  BottomTabScreenProps<BottomTabsParams, "Home">,
-  NativeStackScreenProps<RootStackParams, "TabNav">
+type Props = CompositeScreenProps<
+BottomTabScreenProps<BottomTabsParams, "Home">,
+  NativeStackScreenProps<RootStackParams>
 >;
 
 const Home = ({ navigation }: Props) => {
@@ -34,7 +33,7 @@ const Home = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
 
   function onPayment() {
-    navigation.navigate("Payment");
+    navigation.navigate("Payment")
   }
 
   function onLoanRequest() {
@@ -62,10 +61,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Column space={1}>
-                  <Image
-                    source={require("../../../assets/wallet.png")}
-                    alt=""
-                  />
+                  <Image source={require("../../../assets/wallet.png")} alt="" />
                   <Text>Khoản nợ</Text>
                 </Column>
                 <Column>
@@ -90,10 +86,7 @@ const Home = ({ navigation }: Props) => {
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
                 <Pressable onPress={onPayment}>
-                  <Icon
-                    as={<MaterialIcons name="arrow-forward" />}
-                    size={6}
-                  ></Icon>
+                  <Icon as={<MaterialIcons name="arrow-forward" />} size={6}></Icon>
                 </Pressable>
               </Row>
             </Center>
@@ -109,12 +102,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
-                  >
+                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
                     1 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">
@@ -126,12 +114,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
-                  >
+                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
                     2 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">
@@ -145,12 +128,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
-                  >
+                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
                     3 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">
@@ -162,12 +140,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
-                  >
+                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
                     5 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">

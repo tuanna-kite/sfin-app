@@ -166,7 +166,7 @@ const Activities = () => {
       <HeaderBackground text="Hoạt động"></HeaderBackground>
       <FlatList
         flex={1}
-        mx={5}
+        px={5}
         mt={7}
         data={data}
         renderItem={renderPackageTag}

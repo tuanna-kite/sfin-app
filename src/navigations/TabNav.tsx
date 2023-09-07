@@ -8,9 +8,9 @@ import Activities from "../screens/tabs/Activities";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Icon } from "native-base";
 import ProfileVerification from "../screens/tabs/Profile/ProfileVerification";
-// import { BottomTabsParams } from "./types";
+import { BottomTabsParams } from "./config";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<BottomTabsParams>();
 
 const TabNav = () => {
   return (
