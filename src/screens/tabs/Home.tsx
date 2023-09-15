@@ -21,7 +21,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 
 type Props = CompositeScreenProps<
-BottomTabScreenProps<BottomTabsParams, "Home">,
+  BottomTabScreenProps<BottomTabsParams, "Home">,
   NativeStackScreenProps<RootStackParams>
 >;
 
@@ -33,11 +33,11 @@ const Home = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
 
   function onPayment() {
-    navigation.navigate("Payment")
+    navigation.navigate("Payment");
   }
 
   function onLoanRequest() {
-    navigation.navigate("LoanRequest");
+    navigation.navigate("ProfileVerification", { onPaymentRequest: true });
   }
 
   function choosePackageHandler() {
@@ -61,7 +61,10 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Column space={1}>
-                  <Image source={require("../../../assets/wallet.png")} alt="" />
+                  <Image
+                    source={require("../../../assets/wallet.png")}
+                    alt=""
+                  />
                   <Text>Khoản nợ</Text>
                 </Column>
                 <Column>
@@ -86,7 +89,10 @@ const Home = ({ navigation }: Props) => {
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
                 <Pressable onPress={onPayment}>
-                  <Icon as={<MaterialIcons name="arrow-forward" />} size={6}></Icon>
+                  <Icon
+                    as={<MaterialIcons name="arrow-forward" />}
+                    size={6}
+                  ></Icon>
                 </Pressable>
               </Row>
             </Center>
@@ -99,22 +105,41 @@ const Home = ({ navigation }: Props) => {
         </Text>
         <Column w={"100%"} h={"40%"} space={2} mt={2}>
           <Row flex={1} space={2}>
+            <Pressable flex={1} onPress={choosePackageHandler}>
+              {({ isPressed }) => {
+                return (
+                  <Center
+                    flex={1}
+                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
+                    shadow={2}
+                    rounded="2xl"
+                  >
+                    <Column>
+                      <Text
+                        fontSize={20}
+                        fontWeight={700}
+                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
+                        textAlign="center"
+                      >
+                        1 Triệu
+                      </Text>
+                      <Text fontSize={12} color={isPressed ? "#FFFFFF": "#9CA3AF"}>
+                        Thời hạn: 1 tháng
+                      </Text>
+                    </Column>
+                  </Center>
+                );
+              }}
+            </Pressable>
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
-                    1 Triệu
-                  </Text>
-                  <Text fontSize={12} color="#9CA3AF">
-                    Thời hạn: 1 tháng
-                  </Text>
-                </Column>
-              </Pressable>
-            </Center>
-            <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
-              <Pressable onPress={choosePackageHandler}>
-                <Column>
-                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
+                  <Text
+                    fontSize={20}
+                    fontWeight={700}
+                    color="#F8A01E"
+                    textAlign="center"
+                  >
                     2 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">
@@ -128,7 +153,12 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
+                  <Text
+                    fontSize={20}
+                    fontWeight={700}
+                    color="#F8A01E"
+                    textAlign="center"
+                  >
                     3 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">
@@ -140,7 +170,12 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
               <Pressable onPress={choosePackageHandler}>
                 <Column>
-                  <Text fontSize={20} fontWeight={700} color="#F8A01E" textAlign="center">
+                  <Text
+                    fontSize={20}
+                    fontWeight={700}
+                    color="#F8A01E"
+                    textAlign="center"
+                  >
                     5 Triệu
                   </Text>
                   <Text fontSize={12} color="#9CA3AF">

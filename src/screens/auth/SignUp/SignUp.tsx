@@ -15,34 +15,43 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../../components/ui/UnderlinedInput";
 import PasswordInput from "../../../components/ui/PasswordInput";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { firebaseDb } from "../../../firebase";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "SignUp">;
 
-const SignUp = ({ navigation, route }: Props) => {
-  const [messageShown, setMessageShown] = useState(false);
+const SignUp = ({ navigation }: Props) => {
+  const [message, setMessage] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [passRetyped, setPassRetyped] = useState("");
 
   function onLogIn() {
     navigation.navigate("Login");
   }
-  function onFillProfile() {
-    navigation.navigate("FillProfile");
-  }
-  function passChangeHandle(text: string) {
-    setPassword(text);
-  }
-  function passRetypedHandle(text: string) {
-    setPassRetyped(text);
-  }
-  function passHandler() {
+
+
+  async function onRegister() {
+    const usersRef = collection(firebaseDb, "users");
+    const docRef = doc(firebaseDb, "users", phone);
+    const docSnap = await getDoc(docRef);
+
     if (password === passRetyped) {
-      setMessageShown(false);
-      navigation.navigate("FillProfile");
+      if (docSnap.exists()) {
+        setMessage("Tài khoản đã tồn tại");
+      } else {
+        await setDoc(doc(usersRef, phone), {
+          phone: phone,
+          password: password,
+        });
+        setMessage(null);
+        onLogIn();
+      }
     } else {
-      setMessageShown(true);
+      setMessage("Mật khẩu nhập lại không khớp");
     }
   }
+
   return (
     <>
       <Stack position="absolute" w="100%" h="100%">
@@ -75,32 +84,35 @@ const SignUp = ({ navigation, route }: Props) => {
                 </Text>
                 <Text fontSize={12}>Đăng ký để tiếp tục</Text>
               </Column>
-              <UnderlinedInput placeholder={"Điện thoại"} label="Điện thoại" />
+              <UnderlinedInput
+                placeholder={"Điện thoại"}
+                label="Điện thoại"
+                onChangeText={setPhone}
+              />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
                   label="Mật khẩu"
                   value={password}
-                  onChangeText={passChangeHandle}
+                  onChangeText={setPassword}
                 />
                 <PasswordInput
                   placeholder="Nhập lại mật khẩu"
                   label="Nhập lại mật khẩu"
                   value={passRetyped}
-                  onChangeText={passRetypedHandle}
+                  onChangeText={setPassRetyped}
                 />
               </Column>
-              <Button onPress={passHandler}>ĐĂNG KÝ</Button>
-              {messageShown && (
-                <Text
-                  textAlign={"center"}
-                  fontSize={12}
-                  color={"#DC2626"}
-                  fontWeight={400}
-                >
-                  Tài khoản hoặc mật khẩu chưa đúng
-                </Text>
-              )}
+              <Button onPress={onRegister}>ĐĂNG KÝ</Button>
+
+              <Text
+                textAlign={"center"}
+                fontSize={12}
+                color={"#DC2626"}
+                fontWeight={400}
+              >
+                {message}
+              </Text>
             </Column>
           </Center>
         </Box>

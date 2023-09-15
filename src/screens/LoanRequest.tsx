@@ -22,10 +22,11 @@ type Props = NativeStackScreenProps<RootStackParams, "LoanRequest">;
 const LoanRequest = ({ navigation }: Props) => {
   const { popup } = useAppSelector((state) => state.popup);
   const dispatch = useAppDispatch();
+
   function onSendRequest() {
     dispatch(
       setPopup({
-        type: EPopupType.Error,
+        type: EPopupType.Success,
         title: "Yêu cầu của bạn đã được gửi đi",
         desc: "Chúng tôi sẽ kiểm tra trong 48h làm việc",
       })
@@ -38,8 +39,8 @@ const LoanRequest = ({ navigation }: Props) => {
       <Column px={5} flex={1} mb={12} justifyContent="space-between">
         <Box>
           <Text fontSize={10} color="#6B7280" textAlign="center" my={7}>
-            Thanh toán sẽ được tự động chuyển vào tài khoản Momo của bạn sau khi được chúng tôi phê
-            duyệt. Thời gian tối đa là 48h.
+            Thanh toán sẽ được tự động chuyển vào tài khoản Momo của bạn sau khi
+            được chúng tôi phê duyệt. Thời gian tối đa là 48h.
           </Text>
           <Row bg="#F8A01E" rounded="2xl" p={5} space="32">
             <Column>
@@ -73,7 +74,11 @@ const LoanRequest = ({ navigation }: Props) => {
               </Column>
             </Column>
           </Row>
-          <PrimaryInput my={6} label="Mục đích vay" placeholder="Mục đích vay" />
+          <PrimaryInput
+            my={6}
+            label="Mục đích vay"
+            placeholder="Mục đích vay"
+          />
           <PrimaryInput label="Thông tin tài khoản Momo" placeholder="Họ tên" />
           <PrimaryInput placeholder="Số điện thoại Momo" />
         </Box>

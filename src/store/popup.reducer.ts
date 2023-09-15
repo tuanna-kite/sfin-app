@@ -14,7 +14,12 @@ const popupSlice = createSlice({
   initialState,
   reducers: {
     setPopup: (state, actions: PayloadAction<IPopup>) => {
-      state.popup = actions.payload;
+      const { payload } = actions;
+      state.popup = {
+        type: payload.type,
+        desc: payload.desc,
+        title: payload.title,
+      };
     },
     removePopup: (state) => {
       state.popup = null;

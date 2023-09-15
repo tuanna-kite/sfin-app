@@ -1,10 +1,10 @@
 export enum EPopupType {
   Success,
-  Error,
+  Confirm,
 }
 
 export interface IPopup {
   type: EPopupType;
   title: string;
-  desc: string;
+  desc?: string;
 }

@@ -14,9 +14,7 @@ const ForgotPassword = ({ navigation }: Props) => {
     navigation.navigate("SignUp");
   }
   function onVerification() {
-    navigation.navigate("PhoneVerification", {phone});
-    console.log(phone);
-    
+    navigation.navigate("PhoneVerification", {phone});    
   }
   function phoneHandler(text: string) {
     setPhone(text);    

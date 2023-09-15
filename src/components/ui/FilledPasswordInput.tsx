@@ -16,7 +16,7 @@ type FilledPasswordInputProps = {
 } & TextInputProps;
 
 const FilledPasswordInput = (props: FilledPasswordInputProps) => {
-  const [shown, setShown] = useState(true);
+  const [shown, setShown] = useState(false);
   const { label, ...filledPasswordInputProps } = props;
   return (
     <FormControl>
@@ -32,7 +32,7 @@ const FilledPasswordInput = (props: FilledPasswordInputProps) => {
               <Icon
                 as={
                   <MaterialIcons
-                    name={shown ? "visibility" : "visibility-off"}
+                    name={shown ? "visibility-off" : "visibility"}
                   />
                 }
                 size={5}

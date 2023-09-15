@@ -14,11 +14,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, actions: PayloadAction<UserProfile>) => {
-      const {payload} = actions;
-      state.user = {
-        phone: payload.phone,
-        password: payload.password,
-      };
+      state.user = actions.payload;
     },
     removeUser: (state) => {
       state.user = null;

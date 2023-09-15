@@ -8,7 +8,7 @@ type PasswordInputProps={
 }&TextInputProps
 
 const PasswordInput = (props: PasswordInputProps) => {
-  const [shown, setShown] = useState(true);
+  const [shown, setShown] = useState(false);
   const {label, ...passwordInputProps} = props;
   return (
     <FormControl>
@@ -22,7 +22,7 @@ const PasswordInput = (props: PasswordInputProps) => {
           <Pressable onPress={() => setShown(!shown)}>
             <Icon
               as={
-                <MaterialIcons name={shown ? "visibility" : "visibility-off"} />
+                <MaterialIcons name={shown ? "visibility-off" : "visibility"} />
               }
               size={5}
               mr="2"

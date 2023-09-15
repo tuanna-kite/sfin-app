@@ -10,8 +10,8 @@ type HeaderBackgroundProps={
 
 const HeaderBackground = ({ text }:HeaderBackgroundProps) => {
   return (
-    <LinearGradient style={styles.gradient} colors={["#F4762D", "#FCB03F"]}>
-      <Row alignItems={'center'} safeAreaTop>
+    <LinearGradient style={styles.gradient} colors={["#F4762D", "#FCB03F"]} >
+      <Row alignItems={'flex-end'} safeAreaTop h='100' >
         {/* <Icon as={<MaterialIcons name="chevron-left"/>} color={'white'} size={10}></Icon> */}
         <Text fontSize={16} fontWeight={500} color="#FFFFFF" mb={2}>
           {text}
@@ -25,7 +25,7 @@ export default HeaderBackground;
 
 const styles = StyleSheet.create({
   gradient: {
-    justifyContent: "flex-end",
+    
     alignItems: "center",
   },
 });

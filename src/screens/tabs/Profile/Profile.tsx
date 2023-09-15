@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import React from "react";
+import { Alert, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import HeaderBackground from "../../../components/ui/HeaderBackground";
 import {
   Avatar,
@@ -7,29 +7,43 @@ import {
   Button,
   Column,
   Icon,
+  IconButton,
   Image,
   Pressable,
   Row,
   Text,
 } from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParams } from "../../../navigations/config";
-import { useAppDispatch } from "../../../store";
-import { removeUser } from "../../../store/user.reducer";
+import { BottomTabsParams, RootStackParams } from "../../../navigations/config";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { removeUser, setUser } from "../../../store/user.reducer";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { removeLoading, setLoading } from "../../../store/loading.reducer";
+import { uploadImage } from "../../../types/image";
+import { deleteObject, ref } from "firebase/storage";
+import { firebaseDb, firebaseStorage } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
 
-type Props = {} & NativeStackScreenProps<RootStackParams, "Profile">; // TODO: Change to BottomTabs 
+type Props = {} & CompositeScreenProps<
+  NativeStackScreenProps<RootStackParams>,
+  BottomTabScreenProps<BottomTabsParams, "Profile">
+>; // TODO: Change to BottomTabs
 
 const Profile = ({ navigation }: Props) => {
+  const { user } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
+  const [image, setImage] = useState<string | null>(user!.avatarUrl || null);
 
-  function onLoggedOut(){
+  function onLoggedOut() {
     dispatch(removeUser());
   }
 
   function onProfileVerify() {
-    navigation.navigate("ProfileVerification");
+    navigation.navigate("ProfileVerification",{onPaymentRequest:false});
   }
   function onChangePassword() {
     navigation.navigate("ChangePassword");
@@ -37,16 +51,70 @@ const Profile = ({ navigation }: Props) => {
   function onEditProfile() {
     navigation.navigate("EditProfile");
   }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.2,
+    });
+    if (!result.canceled) {
+      try {
+        const imageUri = result.assets[0].uri;
+        dispatch(setLoading());
+        const { imageName, imageUrl } = await uploadImage(imageUri);
+        if (user?.avatarName) {
+          await deleteObject(ref(firebaseStorage, user.avatarName));
+        }
+        await updateDoc(doc(firebaseDb, "users", user!.phone), {
+          avatarUrl: imageUrl,
+          avatarName: imageName,
+        });
+        dispatch(
+          setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName })
+        );
+        setImage(imageUrl);
+      } catch (err) {
+        Alert.alert("Thông báo", (err as any).message);
+      } finally {
+        dispatch(removeLoading());
+      }
+    }
+  };
+
   return (
     <>
       <HeaderBackground text="Thông tin" />
       <Column px={5} mb={5} flex={1} justifyContent="space-between">
         <Box>
           <Row space={"7"} my={7}>
-            <Image alt="" source={require("../../../../assets/avatar.png")} />
+            <Column rounded="full">
+              <Avatar source={{ uri: user!.avatarUrl }} size="2xl" />
+              <IconButton
+                _pressed={{ bg: "coolGray.300" }}
+                position="absolute"
+                variant="solid"
+                bg="white"
+                w="8"
+                h="8"
+                rounded="full"
+                bottom={0}
+                right={0}
+                icon={
+                  <Icon
+                    size="md"
+                    as={Ionicons}
+                    name="camera-outline"
+                    color="red"
+                  />
+                }
+                onPress={pickImage}
+              />
+            </Column>
             <Column>
               <Text fontWeight={500} fontSize={16}>
-                Jordyn Calzoni
+                {user?.userName}
               </Text>
               <Text
                 fontWeight={500}
@@ -57,7 +125,10 @@ const Profile = ({ navigation }: Props) => {
               >
                 Chưa xác thực
               </Text>
-              <Button onPress={onEditProfile} rightIcon={<Icon as={<MaterialIcons name="edit" />} />}>
+              <Button
+                onPress={onEditProfile}
+                rightIcon={<Icon as={<MaterialIcons name="edit" />} />}
+              >
                 Sửa thông tin
               </Button>
             </Column>
@@ -101,7 +172,7 @@ const Profile = ({ navigation }: Props) => {
             </Pressable>
           </Column>
         </Box>
-        <Button onPress={onLoggedOut}>Đăng xuất</Button>
+        <Button onPress={onLoggedOut}>ĐĂNG XUÂT</Button>
       </Column>
     </>
   );

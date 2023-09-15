@@ -25,9 +25,12 @@ export type RootStackParams = {
   LoanRequest:undefined;
   Notifications:undefined;
   Payment:undefined;
-  Profile:undefined;
-  ProfileVerification: undefined;
+  ProfileVerification:{
+    onPaymentRequest:boolean;
+  };
   TabNav: undefined;
+  Home:undefined;
+
 }
   
   

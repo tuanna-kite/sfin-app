@@ -19,27 +19,21 @@ import UnderlinedInput from "../../components/ui/UnderlinedInput";
 import PasswordInput from "../../components/ui/PasswordInput";
 import { onLog } from "firebase/app";
 import { firebaseDb } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { UserProfile } from "../../types/user";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
-  const [messageShown, setMessageShown] = useState(false);
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const realPassword = "";
+  const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState("123456");
+  const [phone, setPhone] = useState("0372723075");
+  const [loading, setLoading] = useState(false);
 
   function changePasswordHandler(text: string) {
     setPassword(text);
-    setMessageShown(false);
-  }
-
-  function handleLogin() {
-    if (password === realPassword) {
-      setMessageShown(false);
-      onLoggedIn();
-    } else {
-      setMessageShown(true); // Show error message when password is wrong
-    }
+    setError(null);
   }
 
   const dispatch = useAppDispatch();
@@ -51,8 +45,28 @@ const Login = ({ navigation }: Props) => {
   function onSignUp() {
     navigation.navigate("SignUp");
   }
-  function onLoggedIn() {
-    dispatch(setUser({phone,password}));
+  async function onLoggedIn() {
+    try {
+      setLoading(true);
+      const docRef = doc(firebaseDb, "users", phone);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.password !== password) {
+          setError("Sai mật khẩu");
+        } else {
+          dispatch(setUser(data as UserProfile));
+        }
+      } else {
+        // docSnap.data() will be undefined in this case
+        setError("Không tồn tại tài khoản này");
+      }
+    } catch (error) {
+      setError("Đăng nhập thất bại");
+    } finally{
+      setLoading(false);
+    }
   }
   return (
     <>
@@ -71,8 +85,9 @@ const Login = ({ navigation }: Props) => {
           </LinearGradient>
         </Box>
       </Stack>
-      <Center zIndex={2} w="100%" h="100%" mt={120}>
-        <Box width={311} height={424} rounded="3xl" bg="#FFFFFF">
+      <Center zIndex={2} w="100%" h="100%">
+        {loading && <LoadingOverlay />}
+        <Box width={311} height={424} rounded="3xl" bg="#FFFFFF" mt={200}>
           <Center flex={1}>
             <Column px={6} py={10} space={4} flex={1} width="100%">
               <Column space={1}>
@@ -86,7 +101,13 @@ const Login = ({ navigation }: Props) => {
                 </Text>
                 <Text fontSize={12}>Đăng nhập để tiếp tục</Text>
               </Column>
-              <UnderlinedInput placeholder="Điện thoại" label="Điện thoại" onChangeText={setPhone}/>
+              <UnderlinedInput
+                placeholder="Điện thoại"
+                label="Điện thoại"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="numeric"
+              />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
@@ -104,19 +125,18 @@ const Login = ({ navigation }: Props) => {
                   </Button>
                 </Row>
               </Column>
-              <Button rounded="lg" color="#F8A01E" onPress={handleLogin}>
+              <Button rounded="lg" color="#F8A01E" onPress={onLoggedIn}>
                 ĐĂNG NHẬP
               </Button>
-              {messageShown && (
-                <Text
-                  textAlign="center"
-                  fontSize={12}
-                  color="#DC2626"
-                  fontWeight={400}
-                >
-                  Tài khoản hoặc mật khẩu chưa đúng
-                </Text>
-              )}
+
+              <Text
+                textAlign="center"
+                fontSize={12}
+                color="#DC2626"
+                fontWeight={400}
+              >
+                {error}
+              </Text>
             </Column>
           </Center>
         </Box>
