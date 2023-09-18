@@ -53,6 +53,8 @@ const Home = ({ navigation }: Props) => {
     }
   }
 
+  
+
   return (
     <>
       <LinearGradient colors={["#F4762D", "#FCB03F"]} style={styles.gradient}>
@@ -123,7 +125,10 @@ const Home = ({ navigation }: Props) => {
                       >
                         1 Triệu
                       </Text>
-                      <Text fontSize={12} color={isPressed ? "#FFFFFF": "#9CA3AF"}>
+                      <Text
+                        fontSize={12}
+                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
+                      >
                         Thời hạn: 1 tháng
                       </Text>
                     </Column>
@@ -131,59 +136,95 @@ const Home = ({ navigation }: Props) => {
                 );
               }}
             </Pressable>
-            <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
-              <Pressable onPress={choosePackageHandler}>
-                <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
+            <Pressable flex={1} onPress={choosePackageHandler}>
+              {({ isPressed }) => {
+                return (
+                  <Center
+                    flex={1}
+                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
+                    shadow={2}
+                    rounded="2xl"
                   >
-                    2 Triệu
-                  </Text>
-                  <Text fontSize={12} color="#9CA3AF">
-                    Thời hạn: 1 tháng
-                  </Text>
-                </Column>
-              </Pressable>
-            </Center>
+                    <Column>
+                      <Text
+                        fontSize={20}
+                        fontWeight={700}
+                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
+                        textAlign="center"
+                      >
+                        2 Triệu
+                      </Text>
+                      <Text
+                        fontSize={12}
+                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
+                      >
+                        Thời hạn: 1 tháng
+                      </Text>
+                    </Column>
+                  </Center>
+                );
+              }}
+            </Pressable>
           </Row>
           <Row flex={1} space={2}>
-            <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
-              <Pressable onPress={choosePackageHandler}>
-                <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
+            <Pressable flex={1} onPress={choosePackageHandler}>
+              {({ isPressed }) => {
+                return (
+                  <Center
+                    flex={1}
+                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
+                    shadow={2}
+                    rounded="2xl"
                   >
-                    3 Triệu
-                  </Text>
-                  <Text fontSize={12} color="#9CA3AF">
-                    Thời hạn: 1 tháng
-                  </Text>
-                </Column>
-              </Pressable>
-            </Center>
-            <Center flex={1} bg={"#FFFFFF"} shadow={2} rounded="2xl">
-              <Pressable onPress={choosePackageHandler}>
-                <Column>
-                  <Text
-                    fontSize={20}
-                    fontWeight={700}
-                    color="#F8A01E"
-                    textAlign="center"
+                    <Column>
+                      <Text
+                        fontSize={20}
+                        fontWeight={700}
+                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
+                        textAlign="center"
+                      >
+                        3 Triệu
+                      </Text>
+                      <Text
+                        fontSize={12}
+                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
+                      >
+                        Thời hạn: 1 tháng
+                      </Text>
+                    </Column>
+                  </Center>
+                );
+              }}
+            </Pressable>
+            <Pressable flex={1} onPress={choosePackageHandler}>
+              {({ isPressed }) => {
+                return (
+                  <Center
+                    flex={1}
+                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
+                    shadow={2}
+                    rounded="2xl"
                   >
-                    5 Triệu
-                  </Text>
-                  <Text fontSize={12} color="#9CA3AF">
-                    Thời hạn: 1 tháng
-                  </Text>
-                </Column>
-              </Pressable>
-            </Center>
+                    <Column>
+                      <Text
+                        fontSize={20}
+                        fontWeight={700}
+                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
+                        textAlign="center"
+                      >
+                        5 Triệu
+                      </Text>
+                      <Text
+                        fontSize={12}
+                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
+                      >
+                        Thời hạn: 1 tháng
+                      </Text>
+                    </Column>
+                  </Center>
+                );
+              }}
+            </Pressable>
           </Row>
         </Column>
         <Center w="100%" h={10}>

@@ -36,8 +36,7 @@ import { UserProfile } from "../../../types/user";
 import { removePopup, setPopup } from "../../../store/popup.reducer";
 import { EPopupType } from "../../../types/popup";
 import SuccessPopup from "../../../components/SuccessPopup";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+
 
 type Props = {} & NativeStackScreenProps<RootStackParams,"EditProfile">;
 
@@ -45,15 +44,15 @@ const EditProfile = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
   const { popup } = useAppSelector((state) => state.popup);
 
-  const [gender, setGender] = useState(user!.gender);
+  const [gender, setGender] = useState(user?.gender);
   const [dateShown, setDateShown] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [dateOfBirth, setDateOfBirth] = useState(user!.birthDay);
-  const [name, setName] = useState(user!.userName);
-  const [schoolName, setSchoolName] = useState(user!.school);
+  const [dateOfBirth, setDateOfBirth] = useState(user?.birthDay);
+  const [name, setName] = useState(user?.userName);
+  const [schoolName, setSchoolName] = useState(user?.school);
 
   const dispatch = useAppDispatch();
-  const [image, setImage] = useState<string | null>(user!.avatarUrl || null);
+  const [image, setImage] = useState<string | null>(user?.avatarUrl || null);
 
   async function updateData() {
     await updateDoc(doc(firebaseDb, "users", user!.phone), {
