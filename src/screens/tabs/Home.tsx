@@ -19,6 +19,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BottomTabsParams, RootStackParams } from "../../navigations/config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
+import LoanSelect from "../../components/LoanSelect/LoanSelect";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<BottomTabsParams, "Home">,
@@ -29,6 +30,7 @@ const Home = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const [chosen, setChosen] = useState(false);
   const [messageShown, setMessageShown] = useState(false);
+  const [loan, setLoan] = useState(0);
 
   const { user } = useAppSelector((state) => state.user);
 
@@ -37,23 +39,13 @@ const Home = ({ navigation }: Props) => {
   }
 
   function onLoanRequest() {
-    navigation.navigate("ProfileVerification", { onPaymentRequest: true });
+    navigation.navigate("ProfileVerification", { onPaymentRequest: true, loan });
   }
 
   function choosePackageHandler() {
     setChosen(true);
     setMessageShown(false);
   }
-
-  function showMessageHandler() {
-    if (!chosen) {
-      setMessageShown(true);
-    } else {
-      onLoanRequest();
-    }
-  }
-
-  
 
   return (
     <>
@@ -63,10 +55,7 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Column space={1}>
-                  <Image
-                    source={require("../../../assets/wallet.png")}
-                    alt=""
-                  />
+                  <Image source={require("../../../assets/wallet.png")} alt="" />
                   <Text>Khoản nợ</Text>
                 </Column>
                 <Column>
@@ -91,10 +80,7 @@ const Home = ({ navigation }: Props) => {
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
                 <Pressable onPress={onPayment}>
-                  <Icon
-                    as={<MaterialIcons name="arrow-forward" />}
-                    size={6}
-                  ></Icon>
+                  <Icon as={<MaterialIcons name="arrow-forward" />} size={6}></Icon>
                 </Pressable>
               </Row>
             </Center>
@@ -105,128 +91,8 @@ const Home = ({ navigation }: Props) => {
         <Text fontSize={20} fontWeight={700}>
           Các gói vay
         </Text>
-        <Column w={"100%"} h={"40%"} space={2} mt={2}>
-          <Row flex={1} space={2}>
-            <Pressable flex={1} onPress={choosePackageHandler}>
-              {({ isPressed }) => {
-                return (
-                  <Center
-                    flex={1}
-                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
-                    shadow={2}
-                    rounded="2xl"
-                  >
-                    <Column>
-                      <Text
-                        fontSize={20}
-                        fontWeight={700}
-                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
-                        textAlign="center"
-                      >
-                        1 Triệu
-                      </Text>
-                      <Text
-                        fontSize={12}
-                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
-                      >
-                        Thời hạn: 1 tháng
-                      </Text>
-                    </Column>
-                  </Center>
-                );
-              }}
-            </Pressable>
-            <Pressable flex={1} onPress={choosePackageHandler}>
-              {({ isPressed }) => {
-                return (
-                  <Center
-                    flex={1}
-                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
-                    shadow={2}
-                    rounded="2xl"
-                  >
-                    <Column>
-                      <Text
-                        fontSize={20}
-                        fontWeight={700}
-                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
-                        textAlign="center"
-                      >
-                        2 Triệu
-                      </Text>
-                      <Text
-                        fontSize={12}
-                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
-                      >
-                        Thời hạn: 1 tháng
-                      </Text>
-                    </Column>
-                  </Center>
-                );
-              }}
-            </Pressable>
-          </Row>
-          <Row flex={1} space={2}>
-            <Pressable flex={1} onPress={choosePackageHandler}>
-              {({ isPressed }) => {
-                return (
-                  <Center
-                    flex={1}
-                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
-                    shadow={2}
-                    rounded="2xl"
-                  >
-                    <Column>
-                      <Text
-                        fontSize={20}
-                        fontWeight={700}
-                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
-                        textAlign="center"
-                      >
-                        3 Triệu
-                      </Text>
-                      <Text
-                        fontSize={12}
-                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
-                      >
-                        Thời hạn: 1 tháng
-                      </Text>
-                    </Column>
-                  </Center>
-                );
-              }}
-            </Pressable>
-            <Pressable flex={1} onPress={choosePackageHandler}>
-              {({ isPressed }) => {
-                return (
-                  <Center
-                    flex={1}
-                    bg={isPressed ? "#F8A01E" : "#FFFFFF"}
-                    shadow={2}
-                    rounded="2xl"
-                  >
-                    <Column>
-                      <Text
-                        fontSize={20}
-                        fontWeight={700}
-                        color={isPressed ? "#FFFFFF" : "#F8A01E"}
-                        textAlign="center"
-                      >
-                        5 Triệu
-                      </Text>
-                      <Text
-                        fontSize={12}
-                        color={isPressed ? "#FFFFFF" : "#9CA3AF"}
-                      >
-                        Thời hạn: 1 tháng
-                      </Text>
-                    </Column>
-                  </Center>
-                );
-              }}
-            </Pressable>
-          </Row>
-        </Column>
+        <LoanSelect onChange={setLoan} />
+
         <Center w="100%" h={10}>
           {messageShown && (
             <Text color="#DC2626" fontSize={12} textAlign="center" my={3}>
@@ -235,9 +101,10 @@ const Home = ({ navigation }: Props) => {
           )}
         </Center>
         <Button
-          color="#F8A01E"
           rounded="lg"
-          onPress={showMessageHandler}
+          onPress={onLoanRequest}
+          disabled={loan === 0}
+          bg={loan === 0 ? "muted.500" : "primary.600"}
           rightIcon={<Icon as={<MaterialIcons name="arrow-forward" />} />}
         >
           VAY NGAY

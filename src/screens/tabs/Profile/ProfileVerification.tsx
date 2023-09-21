@@ -34,7 +34,7 @@ const ProfileVerification = ({ navigation, route }: Props) => {
         })
       );
     } else {
-      navigation.navigate("LoanRequest");
+      navigation.navigate("LoanRequest", { loan: route.params.loan });
     }
   }
   const [page, setPage] = useState(1);

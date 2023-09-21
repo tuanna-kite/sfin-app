@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React, { useState } from "react";
 import HeaderBackground from "../../../components/ui/HeaderBackground";
-import { Box, Button, Column, FormControl } from "native-base";
+import { Button, Column, FormControl } from "native-base";
 import FilledPasswordInput from "../../../components/ui/FilledPasswordInput";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
