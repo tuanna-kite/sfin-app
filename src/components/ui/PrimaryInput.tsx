@@ -15,7 +15,7 @@ const PrimaryInput = (props: PrimaryInputProps) => {
     <FormControl my={my}>
       <FormControl.Label>{props.label}</FormControl.Label>
       <Box shadow={2}  >
-        <Input variant="filled" {...primaryInputProps} />
+        <Input bg="white" py="3" variant="filled" {...primaryInputProps} />
       </Box>
     </FormControl>
   );

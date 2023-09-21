@@ -48,7 +48,7 @@ const Payment = ({ navigation }: Props) => {
   }
   return (
     <>
-      <HeaderBackground text="Thanh toán" />
+      <HeaderBackground text="Thanh toán" hasBack />
       {popup && <SuccessPopup onCancel={() => navigation.navigate("Home")} />}
       <ScrollView>
         <Column px={5} mb={5} flex={1}>

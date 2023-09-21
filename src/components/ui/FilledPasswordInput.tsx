@@ -1,14 +1,6 @@
 import { StyleSheet, TextInputProps, View } from "react-native";
 import React, { useState } from "react";
-import {
-  Box,
-  Column,
-  FormControl,
-  Icon,
-  Input,
-  Pressable,
-  Text,
-} from "native-base";
+import { Box, Column, FormControl, Icon, Input, Pressable, Text } from "native-base";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type FilledPasswordInputProps = {
@@ -21,20 +13,18 @@ const FilledPasswordInput = (props: FilledPasswordInputProps) => {
   return (
     <FormControl>
       <FormControl.Label>{props.label}</FormControl.Label>
-      <Box shadow={2}  >
+      <Box shadow={2}>
         <Input
           {...filledPasswordInputProps}
           variant={"filled"}
           size={"md"}
+          bg="white"
+          _focus={{ bg: "white" }}
           type={shown ? "text" : "password"}
           InputRightElement={
             <Pressable onPress={() => setShown(!shown)}>
               <Icon
-                as={
-                  <MaterialIcons
-                    name={shown ? "visibility-off" : "visibility"}
-                  />
-                }
+                as={<MaterialIcons name={shown ? "visibility-off" : "visibility"} />}
                 size={5}
                 mr="2"
                 color="muted.400"
@@ -43,7 +33,6 @@ const FilledPasswordInput = (props: FilledPasswordInputProps) => {
           }
         ></Input>
       </Box>
-      
     </FormControl>
   );
 };

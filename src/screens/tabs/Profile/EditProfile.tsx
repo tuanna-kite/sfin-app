@@ -18,9 +18,7 @@ import {
 } from "native-base";
 import PrimaryInput from "../../../components/ui/PrimaryInput";
 import moment from "moment";
-import RNDateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import * as ImagePicker from "expo-image-picker";
@@ -36,9 +34,9 @@ import { UserProfile } from "../../../types/user";
 import { removePopup, setPopup } from "../../../store/popup.reducer";
 import { EPopupType } from "../../../types/popup";
 import SuccessPopup from "../../../components/SuccessPopup";
+import FormDatePicker from "../../../components/ui/FormDatePicker";
 
-
-type Props = {} & NativeStackScreenProps<RootStackParams,"EditProfile">;
+type Props = {} & NativeStackScreenProps<RootStackParams, "EditProfile">;
 
 const EditProfile = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
@@ -111,9 +109,7 @@ const EditProfile = ({ navigation }: Props) => {
           avatarUrl: imageUrl,
           avatarName: imageName,
         });
-        dispatch(
-          setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName })
-        );
+        dispatch(setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName }));
         setImage(imageUrl);
       } catch (err) {
         Alert.alert("Thông báo", (err as any).message);
@@ -125,13 +121,8 @@ const EditProfile = ({ navigation }: Props) => {
 
   return (
     <>
-      <HeaderBackground text="Sửa thông tin" />
-      {popup && (
-        <SuccessPopup
-          onCancel={() => dispatch(removePopup())}
-          onContinue={updateData}
-        />
-      )}
+      <HeaderBackground text="Sửa thông tin" hasBack />
+      {popup && <SuccessPopup onCancel={() => dispatch(removePopup())} onContinue={updateData} />}
       <Column p={5} mb={5} flex={1} justifyContent="space-between">
         <Column w="100%" alignItems="center" space={2}>
           <Column rounded="full">
@@ -152,14 +143,7 @@ const EditProfile = ({ navigation }: Props) => {
               rounded="full"
               bottom={0}
               right={0}
-              icon={
-                <Icon
-                  size="md"
-                  as={Ionicons}
-                  name="camera-outline"
-                  color="red"
-                />
-              }
+              icon={<Icon size="md" as={Ionicons} name="camera-outline" color="red" />}
               onPress={pickImage}
             />
           </Column>
@@ -175,43 +159,17 @@ const EditProfile = ({ navigation }: Props) => {
             onChangeText={setSchoolName}
             value={schoolName}
           />
-          {dateShown && (
-            <RNDateTimePicker
-              mode="date"
-              display="calendar"
-              value={date}
-              onChange={onChangeDate}
-              positiveButton={{ label: "Select" }}
-            />
-          )}
-          <FormControl>
-            <FormControl.Label>Ngày sinh</FormControl.Label>
-            <Box shadow={2}>
-              <Pressable onPress={dateShownHandler}>
-                <Input
-                  value={dateOfBirth}
-                  isReadOnly
-                  placeholder="Ngày sinh"
-                  variant="filled"
-                  InputRightElement={
-                    <Icon
-                      as={<MaterialIcons name="expand-more" />}
-                      size={10}
-                      ml="1"
-                    />
-                  }
-                />
-              </Pressable>
-            </Box>
-          </FormControl>
+          <FormDatePicker value={new Date()} onChange={() => {}} />
           <FormControl>
             <FormControl.Label>Giới tính</FormControl.Label>
             <Box shadow={2}>
               <Select
+                bg="white"
                 variant="filled"
                 selectedValue={gender}
                 placeholder="Giới tính"
-                _selectedItem={{ endIcon: <CheckIcon size={5} /> }}
+                py="3"
+                _selectedItem={{ endIcon: <CheckIcon size="md" /> }}
                 mt={1}
                 onValueChange={(itemValue) => setGender(itemValue)}
               >

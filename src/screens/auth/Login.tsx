@@ -4,20 +4,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../navigations/config";
 import { useAppDispatch } from "../../store";
 import { setUser } from "../../store/user.reducer";
-import {
-  Box,
-  Button,
-  Center,
-  Column,
-  Text,
-  Image,
-  Stack,
-  Row,
-} from "native-base";
+import { Box, Button, Center, Column, Text, Image, Stack, Row } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
 import PasswordInput from "../../components/ui/PasswordInput";
-import { onLog } from "firebase/app";
 import { firebaseDb } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { UserProfile } from "../../types/user";
@@ -27,8 +17,8 @@ type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
   const [error, setError] = useState<string | null>(null);
-  const [password, setPassword] = useState("123456");
   const [phone, setPhone] = useState("0372723075");
+  const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
   function changePasswordHandler(text: string) {
@@ -64,7 +54,7 @@ const Login = ({ navigation }: Props) => {
       }
     } catch (error) {
       setError("Đăng nhập thất bại");
-    } finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -72,15 +62,9 @@ const Login = ({ navigation }: Props) => {
     <>
       <Stack position="absolute" w="100%" h="100%">
         <Box flex={1}>
-          <LinearGradient
-            colors={["#F4762D", "#FCB03F"]}
-            style={styles.gradient}
-          >
+          <LinearGradient colors={["#F4762D", "#FCB03F"]} style={styles.gradient}>
             <Box zIndex={2}>
-              <Image
-                alt=""
-                source={require("../../../assets/sfin-logo.png")}
-              ></Image>
+              <Image alt="" source={require("../../../assets/sfin-logo.png")}></Image>
             </Box>
           </LinearGradient>
         </Box>
@@ -91,12 +75,7 @@ const Login = ({ navigation }: Props) => {
           <Center flex={1}>
             <Column px={6} py={10} space={4} flex={1} width="100%">
               <Column space={1}>
-                <Text
-                  fontSize={20}
-                  fontWeight="bold"
-                  lineHeight={25}
-                  color="#F8A01E"
-                >
+                <Text fontSize={20} fontWeight="bold" lineHeight={25} color="#F8A01E">
                   Xin chào,
                 </Text>
                 <Text fontSize={12}>Đăng nhập để tiếp tục</Text>
@@ -129,12 +108,7 @@ const Login = ({ navigation }: Props) => {
                 ĐĂNG NHẬP
               </Button>
 
-              <Text
-                textAlign="center"
-                fontSize={12}
-                color="#DC2626"
-                fontWeight={400}
-              >
+              <Text textAlign="center" fontSize={12} color="#DC2626" fontWeight={400}>
                 {error}
               </Text>
             </Column>

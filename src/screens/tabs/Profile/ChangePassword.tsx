@@ -47,7 +47,7 @@ const ChangePassword = ({navigation}:Props) => {
 
   return (
     <>
-      <HeaderBackground text="Đổi mật khẩu" />
+      <HeaderBackground text="Đổi mật khẩu" hasBack />
       {popup && <SuccessPopup onCancel={()=>navigation.navigate("Home")}/>}
       <Column px={5} pt={8} mb={5} justifyContent="space-between" flex={1}>
         <Column space={3}>

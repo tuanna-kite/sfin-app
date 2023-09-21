@@ -11,10 +11,7 @@ import { EPopupType } from "../../../types/popup";
 import { setError } from "../../../store/error.reducer";
 import SuccessPopup from "../../../components/SuccessPopup";
 
-type Props = {} & NativeStackScreenProps<
-  RootStackParams,
-  "ProfileVerification"
->;
+type Props = {} & NativeStackScreenProps<RootStackParams, "ProfileVerification">;
 
 const ProfileVerification = ({ navigation, route }: Props) => {
   const dispatch = useAppDispatch();
@@ -36,15 +33,14 @@ const ProfileVerification = ({ navigation, route }: Props) => {
           desc: "Chúng tôi sẽ kiểm tra trong 48h làm việc",
         })
       );
-    }
-    else{
+    } else {
       navigation.navigate("LoanRequest");
     }
   }
   const [page, setPage] = useState(1);
   return (
     <>
-      <HeaderBackground text="Hồ sơ xác thực" />
+      <HeaderBackground text="Hồ sơ xác thực" hasBack />
       {popup && <SuccessPopup onCancel={() => navigation.navigate("TabNav")} />}
       {page === 1 && (
         <Column mx={4} justifyContent="center" pt={7}>
@@ -52,21 +48,12 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Hình ảnh CCCD
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Chúng tôi cần biết bạn là ai để xác minh danh tính. Vui lòng cung
-            cấp hình ảnh trong điều kiện đầy đủ ánh sáng để hệ thống quét thông
-            tin được chính xác.
+            Chúng tôi cần biết bạn là ai để xác minh danh tính. Vui lòng cung cấp hình ảnh trong
+            điều kiện đầy đủ ánh sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Center>
-            <Image
-              mt={3}
-              alt=""
-              source={require("../../../../assets/take-pic.png")}
-            />
-            <Image
-              mt={3}
-              alt=""
-              source={require("../../../../assets/take-pic.png")}
-            />
+            <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
+            <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
           </Center>
           <Button mt={5} onPress={onNextPage}>
             Tiếp tục
@@ -79,20 +66,12 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Ảnh cá nhân kèm CCCD
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Vui lòng cung cấp hình ảnh cá nhân kèm ảnh CCCD trước ngực trong
-            điều kiện đầy đủ ánh sáng để hệ thống quét thông tin được chính xác.
+            Vui lòng cung cấp hình ảnh cá nhân kèm ảnh CCCD trước ngực trong điều kiện đầy đủ ánh
+            sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Center>
-            <Image
-              mt={3}
-              alt=""
-              source={require("../../../../assets/take-pic.png")}
-            />
-            <Image
-              mt={3}
-              alt=""
-              source={require("../../../../assets/take-pic.png")}
-            />
+            <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
+            <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
           </Center>
           <Button mt={5} onPress={onNextPage}>
             Tiếp tục
@@ -105,17 +84,12 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Hình ảnh bảng điểm
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Vui lòng cung cấp hình ảnh bảng điểm có xác nhận của nhà trường
-            trong điều kiện đầy dủ ánh sáng để hệ thống quét thông tin được
-            chính xác.
+            Vui lòng cung cấp hình ảnh bảng điểm có xác nhận của nhà trường trong điều kiện đầy dủ
+            ánh sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Column flex={1} justifyContent={"space-between"}>
             <Center>
-              <Image
-                mt={3}
-                alt=""
-                source={require("../../../../assets/take-pic.png")}
-              />
+              <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
               <IconButton
                 mt={3}
                 bg={"white"}

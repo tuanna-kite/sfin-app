@@ -43,7 +43,7 @@ const Profile = ({ navigation }: Props) => {
   }
 
   function onProfileVerify() {
-    navigation.navigate("ProfileVerification",{onPaymentRequest:false});
+    navigation.navigate("ProfileVerification", { onPaymentRequest: false });
   }
   function onChangePassword() {
     navigation.navigate("ChangePassword");
@@ -71,9 +71,7 @@ const Profile = ({ navigation }: Props) => {
           avatarUrl: imageUrl,
           avatarName: imageName,
         });
-        dispatch(
-          setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName })
-        );
+        dispatch(setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName }));
         setImage(imageUrl);
       } catch (err) {
         Alert.alert("Thông báo", (err as any).message);
@@ -101,14 +99,7 @@ const Profile = ({ navigation }: Props) => {
                 rounded="full"
                 bottom={0}
                 right={0}
-                icon={
-                  <Icon
-                    size="md"
-                    as={Ionicons}
-                    name="camera-outline"
-                    color="red"
-                  />
-                }
+                icon={<Icon size="md" as={Ionicons} name="camera-outline" color="red" />}
                 onPress={pickImage}
               />
             </Column>
@@ -116,13 +107,7 @@ const Profile = ({ navigation }: Props) => {
               <Text fontWeight={500} fontSize={16}>
                 {user?.userName}
               </Text>
-              <Text
-                fontWeight={500}
-                fontSize={10}
-                color="#9CA3AF"
-                mt={1}
-                mb={4}
-              >
+              <Text fontWeight={500} fontSize={10} color="#9CA3AF" mt={1} mb={4}>
                 Chưa xác thực
               </Text>
               <Button
@@ -136,6 +121,7 @@ const Profile = ({ navigation }: Props) => {
           <Column space={5}>
             <Pressable onPress={onProfileVerify}>
               <Row
+                bg="white"
                 justifyContent="space-between"
                 alignItems="center"
                 p={3}
@@ -148,6 +134,7 @@ const Profile = ({ navigation }: Props) => {
             </Pressable>
             <Pressable>
               <Row
+                bg="white"
                 justifyContent="space-between"
                 alignItems="center"
                 p={3}
@@ -160,6 +147,7 @@ const Profile = ({ navigation }: Props) => {
             </Pressable>
             <Pressable onPress={onChangePassword}>
               <Row
+                bg="white"
                 justifyContent="space-between"
                 alignItems="center"
                 p={3}
