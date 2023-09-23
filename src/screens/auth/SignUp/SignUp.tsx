@@ -85,9 +85,10 @@ const SignUp = ({ navigation }: Props) => {
                 <Text fontSize={12}>Đăng ký để tiếp tục</Text>
               </Column>
               <UnderlinedInput
-                placeholder={"Điện thoại"}
+                placeholder="Điện thoại"
                 label="Điện thoại"
                 onChangeText={setPhone}
+                keyboardType="numeric"
               />
               <Column space={4}>
                 <PasswordInput

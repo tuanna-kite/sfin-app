@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  CheckCircleIcon,
   Column,
   Icon,
   IconButton,
@@ -13,7 +14,7 @@ import {
   Row,
   Text,
 } from "native-base";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BottomTabsParams, RootStackParams } from "../../../navigations/config";
 import { useAppDispatch, useAppSelector } from "../../../store";
@@ -71,7 +72,9 @@ const Profile = ({ navigation }: Props) => {
           avatarUrl: imageUrl,
           avatarName: imageName,
         });
-        dispatch(setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName }));
+        dispatch(
+          setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName })
+        );
         setImage(imageUrl);
       } catch (err) {
         Alert.alert("Thông báo", (err as any).message);
@@ -99,7 +102,14 @@ const Profile = ({ navigation }: Props) => {
                 rounded="full"
                 bottom={0}
                 right={0}
-                icon={<Icon size="md" as={Ionicons} name="camera-outline" color="red" />}
+                icon={
+                  <Icon
+                    size="md"
+                    as={Ionicons}
+                    name="camera-outline"
+                    color="red"
+                  />
+                }
                 onPress={pickImage}
               />
             </Column>
@@ -107,9 +117,31 @@ const Profile = ({ navigation }: Props) => {
               <Text fontWeight={500} fontSize={16}>
                 {user?.userName}
               </Text>
-              <Text fontWeight={500} fontSize={10} color="#9CA3AF" mt={1} mb={4}>
-                Chưa xác thực
-              </Text>
+              {user?.verified ? (
+                <Row alignItems="flex-end"  mt={1}
+                mb={4} space={2}>
+                  <Text
+                    fontWeight={500}
+                    fontSize={10}
+                    textAlign={"center"}
+                    color="#22C55E"
+
+                  >
+                    Đã xác thực
+                  </Text>
+                  <Icon as={<AntDesign name="checkcircle" />} size="xs" color="#22C55E"/>
+                </Row>
+              ) : (
+                <Text
+                  fontWeight={500}
+                  fontSize={10}
+                  color="#9CA3AF"
+                  mt={1}
+                  mb={4}
+                >
+                  Chưa xác thực
+                </Text>
+              )}
               <Button
                 onPress={onEditProfile}
                 rightIcon={<Icon as={<MaterialIcons name="edit" />} />}

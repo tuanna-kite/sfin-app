@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { Box, Column, FormControl, Text } from "native-base";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
+import { EGender } from "../../types/user";
 
 type Props = {
   value: Date;
   onChange: (value: Date) => void;
 };
+
+
 
 const FormDatePicker = ({ value, onChange }: Props) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);

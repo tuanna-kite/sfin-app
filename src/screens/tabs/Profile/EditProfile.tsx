@@ -18,7 +18,9 @@ import {
 } from "native-base";
 import PrimaryInput from "../../../components/ui/PrimaryInput";
 import moment from "moment";
-import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import * as ImagePicker from "expo-image-picker";
@@ -30,39 +32,62 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { setUser } from "../../../store/user.reducer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BottomTabsParams, RootStackParams } from "../../../navigations/config";
-import { UserProfile } from "../../../types/user";
+import { EGender, UserProfile } from "../../../types/user";
 import { removePopup, setPopup } from "../../../store/popup.reducer";
 import { EPopupType } from "../../../types/popup";
 import SuccessPopup from "../../../components/SuccessPopup";
 import FormDatePicker from "../../../components/ui/FormDatePicker";
+import GenderSelect from "../../../components/ui/GenderSelect";
 
 type Props = {} & NativeStackScreenProps<RootStackParams, "EditProfile">;
+
+type ProfileForm = {
+  userName: string;
+  birthDay: Date;
+  gender: EGender;
+  school: string;
+};
+
+export function onInputChange<FieldType>(
+  field: keyof FieldType,
+  setDataForm: any,
+  dataForm: FieldType
+) {
+  return function (value: any) {
+    setDataForm({
+      ...dataForm,
+      [field]: value,
+    });
+  };
+}
 
 const EditProfile = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
   const { popup } = useAppSelector((state) => state.popup);
 
-  const [gender, setGender] = useState(user?.gender);
-  const [dateShown, setDateShown] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [dateOfBirth, setDateOfBirth] = useState(user?.birthDay);
-  const [name, setName] = useState(user?.userName);
-  const [schoolName, setSchoolName] = useState(user?.school);
-
-  const dispatch = useAppDispatch();
   const [image, setImage] = useState<string | null>(user?.avatarUrl || null);
 
+  const [formData, setFormData] = useState<ProfileForm>({
+    userName: user!.userName,
+    birthDay: new Date(user!.birthDay),
+    gender: user!.gender,
+    school: user!.school,
+  });
+
+  const dispatch = useAppDispatch();
+
   async function updateData() {
-    await updateDoc(doc(firebaseDb, "users", user!.phone), {
-      userName: name,
-      school: schoolName,
-      birthDay: dateOfBirth,
-      gender: gender,
-    });
     const docRef = doc(firebaseDb, "users", user!.phone);
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    dispatch(setUser(data as UserProfile));
+    const data = {
+      ...user!,
+      ...formData,
+      birthDay: formData.birthDay.toISOString(),
+    };
+    await updateDoc(docRef, data);
+    dispatch(setUser(data));
+    console.log(formData);
+
     navigation.navigate("TabNav");
   }
 
@@ -76,19 +101,9 @@ const EditProfile = ({ navigation }: Props) => {
     );
   }
 
-  function dateShownHandler() {
-    setDateShown(!dateShown);
-  }
-  function onChangeDate({ type }: DateTimePickerEvent, selectedDate: Date) {
-    if (type == "set") {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-      dateShownHandler();
-    } else {
-      dateShownHandler();
-    }
-    setDateOfBirth(moment(date).format("DD/MM/YYYY"));
-  }
+  // function onChangeDate() {
+  //   setDateOfBirth(moment(date).format("DD/MM/YYYY"));
+  // }
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -109,7 +124,9 @@ const EditProfile = ({ navigation }: Props) => {
           avatarUrl: imageUrl,
           avatarName: imageName,
         });
-        dispatch(setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName }));
+        dispatch(
+          setUser({ ...user!, avatarUrl: imageUrl, avatarName: imageName })
+        );
         setImage(imageUrl);
       } catch (err) {
         Alert.alert("Thông báo", (err as any).message);
@@ -122,7 +139,12 @@ const EditProfile = ({ navigation }: Props) => {
   return (
     <>
       <HeaderBackground text="Sửa thông tin" hasBack />
-      {popup && <SuccessPopup onCancel={() => dispatch(removePopup())} onContinue={updateData} />}
+      {popup && (
+        <SuccessPopup
+          onCancel={() => dispatch(removePopup())}
+          onContinue={updateData}
+        />
+      )}
       <Column p={5} mb={5} flex={1} justifyContent="space-between">
         <Column w="100%" alignItems="center" space={2}>
           <Column rounded="full">
@@ -143,41 +165,53 @@ const EditProfile = ({ navigation }: Props) => {
               rounded="full"
               bottom={0}
               right={0}
-              icon={<Icon size="md" as={Ionicons} name="camera-outline" color="red" />}
+              icon={
+                <Icon
+                  size="md"
+                  as={Ionicons}
+                  name="camera-outline"
+                  color="red"
+                />
+              }
               onPress={pickImage}
             />
           </Column>
           <PrimaryInput
             label="Họ tên"
             placeholder="Vui lòng nhập họ và tên"
-            onChangeText={setName}
-            value={name}
+            onChangeText={onInputChange<ProfileForm>(
+              "userName",
+              setFormData,
+              formData
+            )}
+            value={formData.userName}
           />
           <PrimaryInput
             label="Trường học"
             placeholder="Vui lòng nhập tên trường"
-            onChangeText={setSchoolName}
-            value={schoolName}
+            onChangeText={onInputChange<ProfileForm>(
+              "school",
+              setFormData,
+              formData
+            )}
+            value={formData.school}
           />
-          <FormDatePicker value={new Date()} onChange={() => {}} />
-          <FormControl>
-            <FormControl.Label>Giới tính</FormControl.Label>
-            <Box shadow={2}>
-              <Select
-                bg="white"
-                variant="filled"
-                selectedValue={gender}
-                placeholder="Giới tính"
-                py="3"
-                _selectedItem={{ endIcon: <CheckIcon size="md" /> }}
-                mt={1}
-                onValueChange={(itemValue) => setGender(itemValue)}
-              >
-                <Select.Item label="Nam" value="Nam" />
-                <Select.Item label="Nữ" value="Nữ" />
-              </Select>
-            </Box>
-          </FormControl>
+          <FormDatePicker
+            value={formData.birthDay}
+            onChange={onInputChange<ProfileForm>(
+              "birthDay",
+              setFormData,
+              formData
+            )}
+          />
+          <GenderSelect
+            selected={formData.gender}
+            onChange={onInputChange<ProfileForm>(
+              "gender",
+              setFormData,
+              formData
+            )}
+          />
         </Column>
         <Button onPress={onFinish}>XONG</Button>
       </Column>

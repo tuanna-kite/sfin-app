@@ -1,6 +1,14 @@
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { firebaseStorage } from "../firebase";
 import uuid from "react-native-uuid";
+import * as ImagePicker from "expo-image-picker";
+import { removeLoading, setLoading } from "../store/loading.reducer";
+import { doc, updateDoc } from "firebase/firestore";
+import { firebaseDb, firebaseStorage } from "../firebase";
+import { setUser } from "../store/user.reducer";
+import { useAppDispatch, useAppSelector } from "../store";
+import { Alert } from "react-native";
+
+
 
 export async function uploadImage(uri: string) {
   const blob: any = await new Promise((resolve, reject) => {
@@ -25,4 +33,5 @@ export async function uploadImage(uri: string) {
 
   const imageUrl = await getDownloadURL(fileRef);
   return { imageName, imageUrl };
+  
 }

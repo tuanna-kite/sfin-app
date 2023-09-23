@@ -17,8 +17,8 @@ type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
 const Login = ({ navigation }: Props) => {
   const [error, setError] = useState<string | null>(null);
-  const [phone, setPhone] = useState("0372723075");
-  const [password, setPassword] = useState("123456");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   function changePasswordHandler(text: string) {
