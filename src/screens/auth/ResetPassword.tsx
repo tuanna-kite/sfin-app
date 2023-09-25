@@ -9,7 +9,6 @@ import HeaderBackground from "../../components/ui/HeaderBackground";
 import { useAppDispatch, useAppSelector } from "../../store";
 
 const ResetPassword = () => {
- 
   return (
     <Box flex={1}>
       <HeaderBackground text="Đổi mật khẩu" />
@@ -24,7 +23,6 @@ const ResetPassword = () => {
           <FilledPasswordInput
             label="Mật khẩu mới"
             placeholder="Nhập mật khẩu mới"
-            
           />
           <FilledPasswordInput
             label="Nhập lại mật khẩu"

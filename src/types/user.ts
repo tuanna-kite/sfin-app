@@ -1,3 +1,6 @@
+import { doc, getDoc } from "firebase/firestore";
+import { firebaseDb } from "../firebase";
+
 export interface UserProfile {
   phone: string;
   password: string;
@@ -13,7 +16,7 @@ export interface UserProfile {
   schoolRecordUrl:string,
   userName: string;
   school: string;
-  birthDay: string;
+  birthday: string;
   gender: EGender;
   verified: boolean;
 }
@@ -22,3 +25,5 @@ export enum EGender {
   M,
   F,
 }
+
+

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../../navigations/config";
@@ -15,40 +15,59 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../../components/ui/UnderlinedInput";
 import PasswordInput from "../../../components/ui/PasswordInput";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { firebaseDb } from "../../../firebase";
+import { onInputChange, signUpSchema } from "../../../utils/form";
+import { useAppDispatch } from "../../../store";
+import { setUser } from "../../../store/user.reducer";
+import { UserProfile } from "../../../types/user";
+import { ValidationError } from "yup";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "SignUp">;
 
+type SignUpForm = {
+  phone: string;
+  password: string;
+  passwordRetyped: string;
+};
+
 const SignUp = ({ navigation }: Props) => {
   const [message, setMessage] = useState<string | null>(null);
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [passRetyped, setPassRetyped] = useState("");
+
+  const dispatch = useAppDispatch();
+
+  const [formData, setFormData] = useState<SignUpForm>({
+    phone: "",
+    password: "",
+    passwordRetyped: "",
+  });
 
   function onLogIn() {
     navigation.navigate("Login");
   }
 
-
   async function onRegister() {
-    const usersRef = collection(firebaseDb, "users");
-    const docRef = doc(firebaseDb, "users", phone);
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(firebaseDb, "users", formData.phone);
+      const docSnap = await getDoc(docRef);
+      // const docCollection = collection(firebaseDb, "users", formData.phone)
 
-    if (password === passRetyped) {
-      if (docSnap.exists()) {
-        setMessage("Tài khoản đã tồn tại");
+      if (!docSnap.exists()) {
+        await signUpSchema.validate(formData);
+        if (formData.password !== formData.passwordRetyped) {
+          setMessage("Mật khẩu không khớp");
+        }
+        const docData = {
+          phone: formData.phone,
+          password: formData.password,
+        };
+        await setDoc(docRef, docData);
+        navigation.navigate("FillProfile", {phone: formData.phone, password:formData.password});
       } else {
-        await setDoc(doc(usersRef, phone), {
-          phone: phone,
-          password: password,
-        });
-        setMessage(null);
-        onLogIn();
+        setMessage("Tài khoản đã tồn tại")
       }
-    } else {
-      setMessage("Mật khẩu nhập lại không khớp");
+    } catch (error) {
+      Alert.alert("Thông báo", (error as ValidationError).message);
     }
   }
 
@@ -87,21 +106,23 @@ const SignUp = ({ navigation }: Props) => {
               <UnderlinedInput
                 placeholder="Điện thoại"
                 label="Điện thoại"
-                onChangeText={setPhone}
                 keyboardType="numeric"
+                onDoChange={onInputChange("phone", setFormData, formData)}
               />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
                   label="Mật khẩu"
-                  value={password}
-                  onChangeText={setPassword}
+                  onDoChange={onInputChange("password", setFormData, formData)}
                 />
                 <PasswordInput
                   placeholder="Nhập lại mật khẩu"
                   label="Nhập lại mật khẩu"
-                  value={passRetyped}
-                  onChangeText={setPassRetyped}
+                  onDoChange={onInputChange(
+                    "passwordRetyped",
+                    setFormData,
+                    formData
+                  )}
                 />
               </Column>
               <Button onPress={onRegister}>ĐĂNG KÝ</Button>

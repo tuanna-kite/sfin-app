@@ -1,30 +1,46 @@
 import { StyleSheet, TextInputProps, View } from "react-native";
 import React, { useState } from "react";
-import { Box, Column, FormControl, Icon, Input, Pressable, Text } from "native-base";
+import {
+  Box,
+  Column,
+  FormControl,
+  Icon,
+  Input,
+  Pressable,
+  Text,
+} from "native-base";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type FilledPasswordInputProps = {
   label?: string;
+  onDoChange?: (value: any) => void;
 } & TextInputProps;
 
 const FilledPasswordInput = (props: FilledPasswordInputProps) => {
   const [shown, setShown] = useState(false);
-  const { label, ...filledPasswordInputProps } = props;
+  const { label,onDoChange, ...filledPasswordInputProps } = props;
   return (
     <FormControl>
       <FormControl.Label>{props.label}</FormControl.Label>
-      <Box shadow={2}>
+      <Box>
         <Input
           {...filledPasswordInputProps}
+          onChangeText={onDoChange}
           variant={"filled"}
           size={"md"}
+          keyboardType="name-phone-pad"
           bg="white"
+          shadow={2}
           _focus={{ bg: "white" }}
           type={shown ? "text" : "password"}
           InputRightElement={
             <Pressable onPress={() => setShown(!shown)}>
               <Icon
-                as={<MaterialIcons name={shown ? "visibility-off" : "visibility"} />}
+                as={
+                  <MaterialIcons
+                    name={shown ? "visibility-off" : "visibility"}
+                  />
+                }
                 size={5}
                 mr="2"
                 color="muted.400"

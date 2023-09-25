@@ -39,8 +39,6 @@ const ProfileVerification = ({ navigation, route }: Props) => {
 
   const request = route.params.onPaymentRequest;
 
-  const [image, setImage] = useState<string | null>(user?.frontIdUrl || null);
-
   const pickIdImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -90,7 +88,6 @@ const ProfileVerification = ({ navigation, route }: Props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.2,
-      allowsEditing: true,
     });
     if (!result.canceled) {
       try {
@@ -125,7 +122,6 @@ const ProfileVerification = ({ navigation, route }: Props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.2,
-      allowsEditing: true,
     });
     if (!result.canceled) {
       try {

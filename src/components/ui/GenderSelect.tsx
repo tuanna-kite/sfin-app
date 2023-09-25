@@ -12,7 +12,7 @@ import { EGender } from "../../types/user";
 
 type Props = {
   onChange: (value: EGender) => void;
-  selected?: EGender;
+  selected?: EGender | string;
 };
 
 type ActionSheetProps = {
@@ -23,7 +23,6 @@ type ActionSheetProps = {
 
 const GenderSelect = ({ onChange, selected }: Props) => {
   const [gender, setGender] = useState(selected);
-  const [textGender, setTextGender] = useState("Giới tính");
   const { isOpen, onOpen, onClose } = useDisclose();
 
   return (
@@ -34,7 +33,7 @@ const GenderSelect = ({ onChange, selected }: Props) => {
         </FormControl.Label>
         <TouchableOpacity onPress={onOpen}>
           <Box bg="white" px="3" py="2.5" rounded="lg" shadow="2">
-            <Text fontWeight="medium"> {gender}</Text>
+            <Text fontWeight="medium"> {selected}</Text>
           </Box>
           <Actionsheet isOpen={isOpen} onClose={onClose}>
             <Actionsheet.Content>
@@ -53,7 +52,6 @@ const GenderSelect = ({ onChange, selected }: Props) => {
                 onPress={() => {
                   setGender(EGender.M);
                   onChange(EGender.M)
-                  setTextGender("Nam");
                   onClose();
                 }}
               >
@@ -63,7 +61,6 @@ const GenderSelect = ({ onChange, selected }: Props) => {
                 onPress={() => {
                   setGender(EGender.F);
                   onChange(EGender.F)
-                  setTextGender("Nữ");
                   onClose();
                 }}
               >

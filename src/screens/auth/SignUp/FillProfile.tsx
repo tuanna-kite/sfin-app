@@ -1,4 +1,4 @@
-import { StyleSheet, ViewProps } from "react-native";
+import { Alert, StyleSheet, ViewProps } from "react-native";
 import React, { useState } from "react";
 import {
   Box,
@@ -20,27 +20,59 @@ import RNDateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import moment from "moment";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AuthStackParams } from "../../../navigations/config";
+import { EGender, UserProfile } from "../../../types/user";
+import { fillProfileSchema, onInputChange } from "../../../utils/form";
+import FormDatePicker from "../../../components/ui/FormDatePicker";
+import GenderSelect from "../../../components/ui/GenderSelect";
+import { doc, setDoc } from "firebase/firestore";
+import { firebaseDb } from "../../../firebase";
+import { useAppDispatch } from "../../../store";
+import { setUser } from "../../../store/user.reducer";
+import { ValidationError } from "yup";
 
+type Props = {} & NativeStackScreenProps<AuthStackParams, "FillProfile">;
 
-const FillProfile = (props:ViewProps) => {
-  const [gender, setGender] = useState("");
-  const [dateShown, setDateShown] = useState(false);
+type FillProfileForm = {
+  userName: string;
+  school: string;
+  birthday: Date;
+  gender: EGender;
+};
 
-  const [date, setDate] = useState(new Date());
-  const [dateOfBirth, setDateOfBirth] = useState("");
+const FillProfile = ({ navigation, route }: Props) => {
+  const dispatch = useAppDispatch();
 
-  function dateShownHandler() {
-    setDateShown(!dateShown);
-  }
-  function onChangeDate({ type }, selectedDate: Date) {
-    if (type == "set") {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-      dateShownHandler();
-    } else {
-      dateShownHandler();
+  const { phone, password } = route.params;
+
+  const [formData, setFormData] = useState<FillProfileForm>({
+    userName: "",
+    school: "",
+    birthday: new Date(),
+    gender: EGender.M,
+  });
+
+  async function updateData() {
+    try {
+      await fillProfileSchema.validate(formData);
+      const docRef = doc(firebaseDb, "users", phone);
+      const docData = {
+        phone,
+        password,
+        ...formData,
+        birthday: moment(formData.birthday).format("DD-MM-YYYY"),
+        gender: formData.gender === EGender.M ? "Male" : "Female"
+      };
+      const userData = {
+        ...formData,
+        birthday: moment(formData.birthday).format("YYYY-MM-DD"),
+      }
+      await setDoc(docRef, docData);
+      dispatch(setUser(userData as UserProfile));
+    } catch (error) {
+      Alert.alert("Thông báo", (error as ValidationError).message);
     }
-    setDateOfBirth(moment(date).format("DD/MM/YYYY"));
   }
 
   return (
@@ -55,58 +87,50 @@ const FillProfile = (props:ViewProps) => {
       </Text>
       <Box style={styles.inputContainer}>
         <Column space={2}>
-          <PrimaryInput label="Họ tên" placeholder="Vui lòng nhập họ và tên" />
+          <PrimaryInput
+            autoCapitalize="words"
+            label="Họ tên"
+            placeholder="Vui lòng nhập họ và tên"
+            onChangeText={onInputChange<FillProfileForm>(
+              "userName",
+              setFormData,
+              formData
+            )}
+            value={formData.userName}
+          />
           <PrimaryInput
             label="Trường học"
             placeholder="Vui lòng nhập tên trường"
+            onChangeText={onInputChange<FillProfileForm>(
+              "school",
+              setFormData,
+              formData
+            )}
+            value={formData.school}
           />
-          {dateShown && (
-            <RNDateTimePicker
-              mode="date"
-              display="calendar"
-              value={date}
-              onChange={onChangeDate}
-              positiveButton={{ label: "Select" }}
-            />
-          )}
-          <FormControl>
-            <FormControl.Label>Ngày sinh</FormControl.Label>
-            <Box shadow={2}>
-              <Pressable onPress={dateShownHandler}>
-                <Input
-                  value={dateOfBirth}
-                  isReadOnly
-                  placeholder="Ngày sinh"
-                  variant="filled"
-                  InputRightElement={
-                    <Icon
-                      as={<MaterialIcons name="expand-more" />}
-                      size={10}
-                      ml="1"
-                    />
-                  }
-                />
-              </Pressable>
-            </Box>
-          </FormControl>
-          <FormControl>
-            <FormControl.Label>Giới tính</FormControl.Label>
-            <Box shadow={2}>
-              <Select
-                variant="filled"
-                selectedValue={gender}
-                placeholder="Giới tính"
-                _selectedItem={{ endIcon: <CheckIcon size={5} /> }}
-                mt={1}
-                onValueChange={(itemValue) => setGender(itemValue)}
-              >
-                <Select.Item label="Nam" value="m" />
-                <Select.Item label="Nữ" value="f" />
-              </Select>
-            </Box>
-          </FormControl>
+          <FormDatePicker
+            value={formData.birthday}
+            onChange={onInputChange<FillProfileForm>(
+              "birthday",
+              setFormData,
+              formData
+            )}
+          />
+          <GenderSelect
+            selected={formData.gender === EGender.M ? "Male" : "Female"}
+            onChange={onInputChange<FillProfileForm>(
+              "gender",
+              setFormData,
+              formData
+            )}
+          />
 
-          <Button rounded="lg" color="#F8A01E" marginTop={240}>
+          <Button
+            rounded="lg"
+            color="#F8A01E"
+            marginTop={240}
+            onPress={updateData}
+          >
             TIẾP TỤC
           </Button>
         </Column>

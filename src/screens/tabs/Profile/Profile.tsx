@@ -117,19 +117,21 @@ const Profile = ({ navigation }: Props) => {
               <Text fontWeight={500} fontSize={16}>
                 {user?.userName}
               </Text>
-              {user?.verified ? (
-                <Row alignItems="flex-end"  mt={1}
-                mb={4} space={2}>
+              {user!.verified ? (
+                <Row alignItems="flex-end" mt={1} mb={4} space={2}>
                   <Text
                     fontWeight={500}
                     fontSize={10}
                     textAlign={"center"}
                     color="#22C55E"
-
                   >
                     Đã xác thực
                   </Text>
-                  <Icon as={<AntDesign name="checkcircle" />} size="xs" color="#22C55E"/>
+                  <Icon
+                    as={<AntDesign name="checkcircle" />}
+                    size="xs"
+                    color="#22C55E"
+                  />
                 </Row>
               ) : (
                 <Text

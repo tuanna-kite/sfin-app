@@ -3,11 +3,12 @@ import React from "react";
 import { Column, FormControl, Input, Text } from "native-base";
 
 type UnderlinedInputProps = {
+  onDoChange?: (value: any) => void;
   label?: string;
 } & TextInputProps;
 
 const UnderlinedInput = (props: UnderlinedInputProps) => {
-  const { label, ...inputProps } = props;
+  const { label, onDoChange, ...inputProps } = props;
   return (
     <FormControl>
       <FormControl.Label>{label}</FormControl.Label>
@@ -17,6 +18,7 @@ const UnderlinedInput = (props: UnderlinedInputProps) => {
         size={"md"}
         type="text"
         placeholder={props.placeholder}
+        onChangeText={onDoChange}
       ></Input>
     </FormControl>
   );

@@ -12,7 +12,10 @@ export type AuthStackParams = {
   PhoneVerification: {
     phone: string;
   };
-  FillProfile: undefined;
+  FillProfile: {
+    phone:string,
+    password:string,
+  };
 };
 
 export type RootStackParams = {

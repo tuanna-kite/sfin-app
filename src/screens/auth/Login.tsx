@@ -4,7 +4,16 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../navigations/config";
 import { useAppDispatch } from "../../store";
 import { setUser } from "../../store/user.reducer";
-import { Box, Button, Center, Column, Text, Image, Stack, Row } from "native-base";
+import {
+  Box,
+  Button,
+  Center,
+  Column,
+  Text,
+  Image,
+  Stack,
+  Row,
+} from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import UnderlinedInput from "../../components/ui/UnderlinedInput";
 import PasswordInput from "../../components/ui/PasswordInput";
@@ -12,19 +21,22 @@ import { firebaseDb } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { UserProfile } from "../../types/user";
 import LoadingOverlay from "../../components/LoadingOverlay";
+import { onInputChange } from "../../utils/form";
 
 type Props = {} & NativeStackScreenProps<AuthStackParams, "Login">;
 
+type LoginForm = {
+  phone: string;
+  password: string;
+};
+
 const Login = ({ navigation }: Props) => {
   const [error, setError] = useState<string | null>(null);
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  function changePasswordHandler(text: string) {
-    setPassword(text);
-    setError(null);
-  }
+  const [formData, setFormData] = useState<LoginForm>({
+    phone: "",
+    password: "",
+  });
 
   const dispatch = useAppDispatch();
 
@@ -38,15 +50,18 @@ const Login = ({ navigation }: Props) => {
   async function onLoggedIn() {
     try {
       setLoading(true);
-      const docRef = doc(firebaseDb, "users", phone);
+      const docRef = doc(firebaseDb, "users", formData.phone);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        if (data.password !== password) {
+        if (data.password !== formData.password) {
           setError("Sai mật khẩu");
         } else {
-          dispatch(setUser(data as UserProfile));
+          const userData = {
+            ...data,
+          };
+          dispatch(setUser(userData as UserProfile));
         }
       } else {
         // docSnap.data() will be undefined in this case
@@ -62,9 +77,15 @@ const Login = ({ navigation }: Props) => {
     <>
       <Stack position="absolute" w="100%" h="100%">
         <Box flex={1}>
-          <LinearGradient colors={["#F4762D", "#FCB03F"]} style={styles.gradient}>
+          <LinearGradient
+            colors={["#F4762D", "#FCB03F"]}
+            style={styles.gradient}
+          >
             <Box zIndex={2}>
-              <Image alt="" source={require("../../../assets/sfin-logo.png")}></Image>
+              <Image
+                alt=""
+                source={require("../../../assets/sfin-logo.png")}
+              ></Image>
             </Box>
           </LinearGradient>
         </Box>
@@ -75,7 +96,12 @@ const Login = ({ navigation }: Props) => {
           <Center flex={1}>
             <Column px={6} py={10} space={4} flex={1} width="100%">
               <Column space={1}>
-                <Text fontSize={20} fontWeight="bold" lineHeight={25} color="#F8A01E">
+                <Text
+                  fontSize={20}
+                  fontWeight="bold"
+                  lineHeight={25}
+                  color="#F8A01E"
+                >
                   Xin chào,
                 </Text>
                 <Text fontSize={12}>Đăng nhập để tiếp tục</Text>
@@ -83,16 +109,16 @@ const Login = ({ navigation }: Props) => {
               <UnderlinedInput
                 placeholder="Điện thoại"
                 label="Điện thoại"
-                value={phone}
-                onChangeText={setPhone}
+                onDoChange={onInputChange("phone", setFormData, formData)}
                 keyboardType="numeric"
+                value={formData.phone}
               />
               <Column space={4}>
                 <PasswordInput
                   placeholder="Mật khẩu"
                   label="Mật khẩu"
-                  value={password}
-                  onChangeText={changePasswordHandler}
+                  onDoChange={onInputChange("password", setFormData, formData)}
+                  value={formData.password}
                 />
                 <Row>
                   <Button
@@ -108,7 +134,12 @@ const Login = ({ navigation }: Props) => {
                 ĐĂNG NHẬP
               </Button>
 
-              <Text textAlign="center" fontSize={12} color="#DC2626" fontWeight={400}>
+              <Text
+                textAlign="center"
+                fontSize={12}
+                color="#DC2626"
+                fontWeight={400}
+              >
                 {error}
               </Text>
             </Column>

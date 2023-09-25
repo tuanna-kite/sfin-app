@@ -43,7 +43,7 @@ type Props = {} & NativeStackScreenProps<RootStackParams, "EditProfile">;
 
 type ProfileForm = {
   userName: string;
-  birthDay: Date;
+  birthday: Date;
   gender: EGender;
   school: string;
 };
@@ -65,12 +65,11 @@ const EditProfile = ({ navigation }: Props) => {
   const { user } = useAppSelector((state) => state.user);
   const { popup } = useAppSelector((state) => state.popup);
 
-  const [date, setDate] = useState(new Date());
   const [image, setImage] = useState<string | null>(user?.avatarUrl || null);
 
   const [formData, setFormData] = useState<ProfileForm>({
     userName: user!.userName,
-    birthDay: new Date(user!.birthDay),
+    birthday: new Date(user!.birthday),
     gender: user!.gender,
     school: user!.school,
   });
@@ -82,12 +81,16 @@ const EditProfile = ({ navigation }: Props) => {
     const data = {
       ...user!,
       ...formData,
-      birthDay: formData.birthDay.toISOString(),
+      birthday: moment(formData.birthday).format("DD - MM - YYYY"),
+      gender: formData.gender === EGender.M ? "Male" : "Female"
     };
+    const userData = {
+      ...user!,
+      ...formData,
+      birthday: moment(formData.birthday).format("YYYY-MM-DD"),
+    }
     await updateDoc(docRef, data);
-    dispatch(setUser(data));
-    console.log(formData);
-
+    dispatch(setUser(userData));
     navigation.navigate("TabNav");
   }
 
@@ -101,9 +104,6 @@ const EditProfile = ({ navigation }: Props) => {
     );
   }
 
-  // function onChangeDate() {
-  //   setDateOfBirth(moment(date).format("DD/MM/YYYY"));
-  // }
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -197,15 +197,15 @@ const EditProfile = ({ navigation }: Props) => {
             value={formData.school}
           />
           <FormDatePicker
-            value={formData.birthDay}
+            value={formData.birthday}
             onChange={onInputChange<ProfileForm>(
-              "birthDay",
+              "birthday",
               setFormData,
               formData
             )}
           />
           <GenderSelect
-            selected={formData.gender}
+            selected={formData.gender === EGender.M ? "Male" : "Female"}
             onChange={onInputChange<ProfileForm>(
               "gender",
               setFormData,
