@@ -39,7 +39,7 @@ const ProfileVerification = ({ navigation, route }: Props) => {
 
   const request = route.params.onPaymentRequest;
 
-  const pickIdImage = async () => {
+  const pickFrontIdImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -50,10 +50,8 @@ const ProfileVerification = ({ navigation, route }: Props) => {
     if (!result.canceled) {
       try {
         const frontIdUri = result.assets[0].uri;
-        const backIdUri = result.assets[1].uri;
         dispatch(setLoading());
         const frontImage = await uploadImage(frontIdUri);
-        const backImage = await uploadImage(backIdUri);
 
         if (user?.frontIdName) {
           await deleteObject(ref(firebaseStorage, user.frontIdName));
@@ -64,14 +62,48 @@ const ProfileVerification = ({ navigation, route }: Props) => {
         await updateDoc(doc(firebaseDb, "users", user!.phone), {
           frontIdUrl: frontImage.imageUrl,
           frontIdName: frontImage.imageName,
-          backIdUrl: backImage.imageUrl,
-          backIdName: backImage.imageName,
         });
         dispatch(
           setUser({
             ...user!,
             frontIdUrl: frontImage.imageUrl,
             frontIdName: frontImage.imageName,
+          })
+        );
+      } catch (err) {
+        Alert.alert("Thông báo", (err as any).message);
+      } finally {
+        dispatch(removeLoading());
+      }
+    }
+  };
+
+  const pickBackIdImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.2,
+      orderedSelection: true,
+      selectionLimit: 2,
+    });
+    if (!result.canceled) {
+      try {
+        const backIdUri = result.assets[0].uri;
+        dispatch(setLoading());
+        const backImage = await uploadImage(backIdUri);
+
+        if (user?.frontIdName) {
+          await deleteObject(ref(firebaseStorage, user.frontIdName));
+        }
+        if (user?.backIdName) {
+          await deleteObject(ref(firebaseStorage, user.backIdName));
+        }
+        await updateDoc(doc(firebaseDb, "users", user!.phone), {
+          backIdUrl: backImage.imageUrl,
+          backIdName: backImage.imageName,
+        });
+        dispatch(
+          setUser({
+            ...user!,
             backIdUrl: backImage.imageUrl,
             backIdName: backImage.imageName,
           })
@@ -154,7 +186,7 @@ const ProfileVerification = ({ navigation, route }: Props) => {
 
   async function updateVerified() {
     await updateDoc(doc(firebaseDb, "users", user!.phone), {
-      verify: "verified",
+      verified:true,
     });
     dispatch(
       setUser({
@@ -191,8 +223,8 @@ const ProfileVerification = ({ navigation, route }: Props) => {
       {popup && (
         <SuccessPopup
           onCancel={() => {
-            navigation.navigate("TabNav");
             updateVerified();
+            navigation.navigate("Home");
           }}
         />
       )}
@@ -207,7 +239,7 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             tin được chính xác.
           </Text>
           <Center>
-            <Pressable onPress={pickIdImage}>
+            <Pressable onPress={pickFrontIdImage}>
               {!user?.frontIdUrl ? (
                 <Image
                   mt={3}
@@ -223,8 +255,8 @@ const ProfileVerification = ({ navigation, route }: Props) => {
                 />
               )}
             </Pressable>
-            <Pressable onPress={pickIdImage}>
-              {!user?.frontIdUrl ? (
+            <Pressable onPress={pickBackIdImage}>
+              {!user?.backIdUrl ? (
                 <Image
                   mt={3}
                   alt=""

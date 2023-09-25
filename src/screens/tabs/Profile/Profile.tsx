@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Center,
   CheckCircleIcon,
   Column,
   Icon,
@@ -44,7 +45,7 @@ const Profile = ({ navigation }: Props) => {
   }
 
   function onProfileVerify() {
-    navigation.navigate("ProfileVerification", { onPaymentRequest: false });
+    navigation.navigate("ProfileVerification", { onPaymentRequest: false, loan:1 });
   }
   function onChangePassword() {
     navigation.navigate("ChangePassword");
@@ -91,7 +92,13 @@ const Profile = ({ navigation }: Props) => {
         <Box>
           <Row space={"7"} my={7}>
             <Column rounded="full">
-              <Avatar source={{ uri: user!.avatarUrl }} size="2xl" />
+            {user?.avatarUrl ? (
+              <Avatar size="2xl" source={{ uri: user?.avatarUrl }} />
+            ) : (
+              <Center bg="white" rounded="full" w="32" h="32">
+                <Ionicons name="person-outline" color="gray" size={32} />
+              </Center>
+            )}
               <IconButton
                 _pressed={{ bg: "coolGray.300" }}
                 position="absolute"

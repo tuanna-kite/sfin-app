@@ -1,4 +1,4 @@
-import { collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { UserProfile } from "./user";
 import { firebaseDb } from "../firebase";
 import moment from "moment";
@@ -40,6 +40,7 @@ export async function createLoan(user: string, loanRequest: LoanRequestForm) {
     accept: EAccept.Pending,
   };
   // TODO: Add doc
+  await setDoc(doc(debtRef), newDebt)
 }
 
 export async function getAllDebts(user: string) {

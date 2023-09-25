@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
   Box,
@@ -20,31 +20,34 @@ import { BottomTabsParams, RootStackParams } from "../../navigations/config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import LoanSelect from "../../components/LoanSelect/LoanSelect";
+import { doc, getDoc } from "firebase/firestore";
+import { firebaseDb } from "../../firebase";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<BottomTabsParams, "Home">,
   NativeStackScreenProps<RootStackParams>
 >;
 
-const Home = ({ navigation }: Props) => {
+const Home = ({ navigation, route }: Props) => {
   const dispatch = useAppDispatch();
-  const [chosen, setChosen] = useState(false);
+  const { user } = useAppSelector((state) => state.user);
   const [messageShown, setMessageShown] = useState(false);
   const [loan, setLoan] = useState(0);
 
-  const { user } = useAppSelector((state) => state.user);
+  const verified = user!.verified;
+  // const verified = true;
 
   function onPayment() {
     navigation.navigate("Payment");
   }
-
   function onLoanRequest() {
-    navigation.navigate("ProfileVerification", { onPaymentRequest: true, loan });
+    navigation.navigate("LoanRequest", { loan:loan });
   }
-
-  function choosePackageHandler() {
-    setChosen(true);
-    setMessageShown(false);
+  function onProfileVerify() {
+    navigation.navigate("ProfileVerification", {
+      onPaymentRequest: true,
+      loan,
+    });
   }
 
   return (
@@ -55,12 +58,15 @@ const Home = ({ navigation }: Props) => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Column space={1}>
-                  <Image source={require("../../../assets/wallet.png")} alt="" />
+                  <Image
+                    source={require("../../../assets/wallet.png")}
+                    alt=""
+                  />
                   <Text>Khoản nợ</Text>
                 </Column>
                 <Column>
                   <Text fontSize={24} fontWeight={700} color={"#F4762D"}>
-                    1,000.00
+                    {user!.totalLoan},000.00
                   </Text>
                   <Row justifyContent="space-between">
                     <Text fontSize={10} color="#6B7280">
@@ -80,14 +86,17 @@ const Home = ({ navigation }: Props) => {
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
                 <Pressable onPress={onPayment}>
-                  <Icon as={<MaterialIcons name="arrow-forward" />} size={6}></Icon>
+                  <Icon
+                    as={<MaterialIcons name="arrow-forward" />}
+                    size={6}
+                  ></Icon>
                 </Pressable>
               </Row>
             </Center>
           </Box>
         </Center>
       </LinearGradient>
-      <Column flex={1} m={10}>
+      <Column flex={1} m={4}>
         <Text fontSize={20} fontWeight={700}>
           Các gói vay
         </Text>
@@ -102,7 +111,7 @@ const Home = ({ navigation }: Props) => {
         </Center>
         <Button
           rounded="lg"
-          onPress={onLoanRequest}
+          onPress={verified ? onLoanRequest : onProfileVerify}
           disabled={loan === 0}
           bg={loan === 0 ? "muted.500" : "primary.600"}
           rightIcon={<Icon as={<MaterialIcons name="arrow-forward" />} />}

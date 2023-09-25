@@ -1,5 +1,5 @@
 import { Alert, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderBackground from "../components/ui/HeaderBackground";
 import { Box, Button, Column, Row, Text } from "native-base";
 import PrimaryInput from "../components/ui/PrimaryInput";
@@ -14,6 +14,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { firebaseDb } from "../firebase";
 import { setUser } from "../store/user.reducer";
 import { ValidationError } from "yup";
+import { LoanRequestForm } from "../types/debt";
 
 const textProps = {
   fontWeight: "700",
@@ -23,36 +24,40 @@ const textProps = {
 
 type Props = NativeStackScreenProps<RootStackParams, "LoanRequest">;
 
-type LoanRequestForm = {
-  purpose: string;
-  fullName: string;
-  momoAccount: string;
-};
-
 const LoanRequest = ({ navigation, route }: Props) => {
   const { popup } = useAppSelector((state) => state.popup);
   const { user } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
   const { loan } = route.params;
+  const [loanArray, setLoanArray] = useState([0]);
+  const [loanSum, setLoanSum] = useState(user!.totalLoan);
 
   const [formData, setFormData] = useState<LoanRequestForm>({
-    purpose: "",
-    fullName: "",
-    momoAccount: "",
+    loan: loan,
+    reason: "asjdhfjasdf",
+    fullname: "adsfasd",
+    momo: "03254646456",
   });
 
   async function updateLoanRequest() {
     try {
+      setLoanArray([...loanArray, loan]);
+      let sum = 0;
+      for (let i = 0; i < loanArray.length; i++) {
+        sum += loan;
+      }
+      setLoanSum(sum);
+      onSendRequest();
       await loanRequestSchema.validate(formData);
       const docRef = doc(firebaseDb, "users", user!.phone);
       const LoanRequestData = {
         ...user!,
         ...formData,
+        totalLoan: user!.totalLoan + sum,
       };
       await updateDoc(docRef, LoanRequestData);
       dispatch(setUser(LoanRequestData));
-      onSendRequest();
     } catch (error) {
       Alert.alert("Thông báo", (error as ValidationError).message);
     }
@@ -114,7 +119,7 @@ const LoanRequest = ({ navigation, route }: Props) => {
             label="Mục đích vay"
             placeholder="Mục đích vay"
             onDoChange={onInputChange<LoanRequestForm>(
-              "purpose",
+              "reason",
               setFormData,
               formData
             )}
@@ -124,15 +129,16 @@ const LoanRequest = ({ navigation, route }: Props) => {
             placeholder="Họ tên"
             autoCapitalize="words"
             onDoChange={onInputChange<LoanRequestForm>(
-              "fullName",
+              "fullname",
               setFormData,
               formData
             )}
           />
           <PrimaryInput
             placeholder="Số điện thoại Momo"
+            keyboardType="number-pad"
             onDoChange={onInputChange<LoanRequestForm>(
-              "momoAccount",
+              "momo",
               setFormData,
               formData
             )}

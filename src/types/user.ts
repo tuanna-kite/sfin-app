@@ -18,6 +18,7 @@ export interface UserProfile {
   school: string;
   birthday: string;
   gender: EGender;
+  totalLoan:number;
   verified: boolean;
 }
 

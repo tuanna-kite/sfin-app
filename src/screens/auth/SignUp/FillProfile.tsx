@@ -62,11 +62,17 @@ const FillProfile = ({ navigation, route }: Props) => {
         password,
         ...formData,
         birthday: moment(formData.birthday).format("DD-MM-YYYY"),
-        gender: formData.gender === EGender.M ? "Male" : "Female"
+        gender: formData.gender === EGender.M ? "Male" : "Female",
+        verified: "not verified",
+        totalLoan: 0,
       };
       const userData = {
+        phone,
+        password,
         ...formData,
         birthday: moment(formData.birthday).format("YYYY-MM-DD"),
+        verified:false,
+        totalLoan: 0,
       }
       await setDoc(docRef, docData);
       dispatch(setUser(userData as UserProfile));
