@@ -1,24 +1,7 @@
-import { Alert, StyleSheet, ViewProps } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  CheckIcon,
-  Column,
-  FormControl,
-  Icon,
-  Input,
-  Pressable,
-  Select,
-  Text,
-} from "native-base";
+import { Box, Button, Column, Text } from "native-base";
 import PrimaryInput from "../../../components/ui/PrimaryInput";
-import UnderlinedInput from "../../../components/ui/UnderlinedInput";
-import RNDateTimePicker, {
-  DateTimePickerAndroid,
-} from "@react-native-community/datetimepicker";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import moment from "moment";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthStackParams } from "../../../navigations/config";
@@ -62,12 +45,14 @@ const FillProfile = ({ navigation, route }: Props) => {
         password,
         ...formData,
         birthday: moment(formData.birthday).format("DD-MM-YYYY"),
-        gender: formData.gender === EGender.M ? "Male" : "Female"
+        gender: formData.gender === EGender.M ? "Male" : "Female",
       };
       const userData = {
         ...formData,
+        phone,
+        password,
         birthday: moment(formData.birthday).format("YYYY-MM-DD"),
-      }
+      };
       await setDoc(docRef, docData);
       dispatch(setUser(userData as UserProfile));
     } catch (error) {
@@ -91,46 +76,25 @@ const FillProfile = ({ navigation, route }: Props) => {
             autoCapitalize="words"
             label="Họ tên"
             placeholder="Vui lòng nhập họ và tên"
-            onChangeText={onInputChange<FillProfileForm>(
-              "userName",
-              setFormData,
-              formData
-            )}
+            onChangeText={onInputChange<FillProfileForm>("userName", setFormData, formData)}
             value={formData.userName}
           />
           <PrimaryInput
             label="Trường học"
             placeholder="Vui lòng nhập tên trường"
-            onChangeText={onInputChange<FillProfileForm>(
-              "school",
-              setFormData,
-              formData
-            )}
+            onChangeText={onInputChange<FillProfileForm>("school", setFormData, formData)}
             value={formData.school}
           />
           <FormDatePicker
             value={formData.birthday}
-            onChange={onInputChange<FillProfileForm>(
-              "birthday",
-              setFormData,
-              formData
-            )}
+            onChange={onInputChange<FillProfileForm>("birthday", setFormData, formData)}
           />
           <GenderSelect
-            selected={formData.gender === EGender.M ? "Male" : "Female"}
-            onChange={onInputChange<FillProfileForm>(
-              "gender",
-              setFormData,
-              formData
-            )}
+            selected={formData.gender === EGender.M ? "Nam" : "Nữ"}
+            onChange={onInputChange<FillProfileForm>("gender", setFormData, formData)}
           />
 
-          <Button
-            rounded="lg"
-            color="#F8A01E"
-            marginTop={240}
-            onPress={updateData}
-          >
+          <Button rounded="lg" color="#F8A01E" marginTop={240} onPress={updateData}>
             TIẾP TỤC
           </Button>
         </Column>

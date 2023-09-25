@@ -21,7 +21,7 @@ const PrimaryInput = (props: PrimaryInputProps) => {
   return (
     <FormControl my={my}>
       <FormControl.Label>{props.label}</FormControl.Label>
-      <Box>
+      <Box shadow="3" bg="white">
         <Input
           bg="white"
           py="3"
