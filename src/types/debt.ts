@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { UserProfile } from "./user";
 import { firebaseDb } from "../firebase";
 import moment from "moment";
@@ -10,6 +10,7 @@ export enum EAccept {
 }
 
 export interface IDebt {
+  id?: string;
   user: string | UserProfile;
   loan: number;
   reason: string;
@@ -18,6 +19,7 @@ export interface IDebt {
   createdAt: Date;
   endAt: Date;
   paid: boolean;
+  paidDate?: Date;
   accept: EAccept;
 }
 
@@ -40,9 +42,24 @@ export async function createLoan(user: string, loanRequest: LoanRequestForm) {
     accept: EAccept.Pending,
   };
   // TODO: Add doc
-  await setDoc(doc(debtRef), newDebt)
+  await setDoc(doc(debtRef), newDebt);
 }
 
 export async function getAllDebts(user: string) {
   // TODO: Get docs by user, sort by createdAt
+  const q = query(debtRef, where("user", "==", user));
+  const response = await getDocs(q);
+  return response.docs.map((d) => {
+    const data = d.data();
+    const createdAt = d.data().createdAt.toDate();
+    const item = {
+      ...data,
+      id: d.id,
+      createdAt,
+    } as IDebt;
+    if (data.paidDate) {
+      item.paidDate = data.paid.toDate();
+    }
+    return item;
+  });
 }

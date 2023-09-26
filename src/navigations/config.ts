@@ -13,8 +13,8 @@ export type AuthStackParams = {
     phone: string;
   };
   FillProfile: {
-    phone:string,
-    password:string,
+    phone: string;
+    password: string;
   };
 };
 
@@ -28,10 +28,7 @@ export type RootStackParams = {
   };
   Notifications: undefined;
   Payment: undefined;
-  ProfileVerification: {
-    onPaymentRequest: boolean;
-    loan: number;
-  };
+  ProfileVerification: undefined;
   TabNav: undefined;
   Home: undefined;
 };

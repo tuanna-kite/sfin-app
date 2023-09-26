@@ -39,6 +39,10 @@ const FillProfile = ({ navigation, route }: Props) => {
   async function updateData() {
     try {
       await fillProfileSchema.validate(formData);
+      const age = moment(new Date()).diff(formData.birthday, "year");
+      if (age < 18 || age > 25) {
+        throw Error("Bạn cần trong độ tuổi sinh viên");
+      }
       const docRef = doc(firebaseDb, "users", phone);
       const docData = {
         phone,
@@ -46,15 +50,14 @@ const FillProfile = ({ navigation, route }: Props) => {
         ...formData,
         birthday: moment(formData.birthday).format("DD-MM-YYYY"),
         gender: formData.gender === EGender.M ? "Male" : "Female",
-        verified: "not verified",
-        totalLoan: 0,
+        verified: false,
       };
       const userData = {
         phone,
         password,
         ...formData,
         birthday: moment(formData.birthday).format("YYYY-MM-DD"),
-      }
+      };
       await setDoc(docRef, docData);
       dispatch(setUser(userData as UserProfile));
     } catch (error) {

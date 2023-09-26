@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
@@ -18,36 +18,64 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BottomTabsParams, RootStackParams } from "../../navigations/config";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
+import { CompositeScreenProps, useFocusEffect } from "@react-navigation/native";
 import LoanSelect from "../../components/LoanSelect/LoanSelect";
-import { doc, getDoc } from "firebase/firestore";
-import { firebaseDb } from "../../firebase";
+import { removeLoading, setLoading } from "../../store/loading.reducer";
+import { getAllDebts } from "../../types/debt";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import { setPopup } from "../../store/popup.reducer";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<BottomTabsParams, "Home">,
   NativeStackScreenProps<RootStackParams>
 >;
 
+let CurrencyFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "VND",
+});
+
 const Home = ({ navigation, route }: Props) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [messageShown, setMessageShown] = useState(false);
   const [loan, setLoan] = useState(0);
-
-  const verified = user!.verified;
-  // const verified = true;
+  const [totalDebt, setTotalDebt] = useState(0);
 
   function onPayment() {
     navigation.navigate("Payment");
   }
   function onLoanRequest() {
-    navigation.navigate("LoanRequest", { loan:loan });
+    if (user!.verified) {
+      navigation.navigate("LoanRequest", { loan: loan });
+    } else {
+      Alert.alert("Thông báo", "Bạn chưa xác thực hồ sơ", [
+        { text: "Xác thực", onPress: () => navigation.navigate("ProfileVerification") },
+      ]);
+    }
   }
-  function onProfileVerify() {
-    navigation.navigate("ProfileVerification", {
-      onPaymentRequest: true,
-      loan,
-    });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      async function loadDebts() {
+        try {
+          dispatch(setLoading());
+          const debts = await getAllDebts(user!.phone);
+          const total = debts.reduce((prev, current) => prev + current.loan, 0);
+          setTotalDebt(total);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          dispatch(removeLoading());
+        }
+      }
+      loadDebts();
+    }, [])
+  );
+
+  if (isLoading) {
+    return <LoadingOverlay style={{ backgroundColor: "white" }} />;
   }
 
   return (
@@ -58,24 +86,21 @@ const Home = ({ navigation, route }: Props) => {
             <Center flex={1}>
               <Row w={"90%"} justifyContent="space-between">
                 <Column space={1}>
-                  <Image
-                    source={require("../../../assets/wallet.png")}
-                    alt=""
-                  />
+                  <Image source={require("../../../assets/wallet.png")} alt="" />
                   <Text>Khoản nợ</Text>
                 </Column>
                 <Column>
                   <Text fontSize={24} fontWeight={700} color={"#F4762D"}>
-                    {user!.totalLoan},000.00
+                    {CurrencyFormat.format(totalDebt)}
                   </Text>
-                  <Row justifyContent="space-between">
+                  {/* <Row justifyContent="space-between">
                     <Text fontSize={10} color="#6B7280">
                       Hạn
                     </Text>
                     <Text fontSize={10} color="#6B7280">
                       28 ngày
                     </Text>
-                  </Row>
+                  </Row> */}
                 </Column>
               </Row>
             </Center>
@@ -86,10 +111,7 @@ const Home = ({ navigation, route }: Props) => {
               <Row w={"90%"} justifyContent="space-between">
                 <Text underline>Thanh toán</Text>
                 <Pressable onPress={onPayment}>
-                  <Icon
-                    as={<MaterialIcons name="arrow-forward" />}
-                    size={6}
-                  ></Icon>
+                  <Icon as={<MaterialIcons name="arrow-forward" />} size={6}></Icon>
                 </Pressable>
               </Row>
             </Center>
@@ -111,7 +133,7 @@ const Home = ({ navigation, route }: Props) => {
         </Center>
         <Button
           rounded="lg"
-          onPress={verified ? onLoanRequest : onProfileVerify}
+          onPress={onLoanRequest}
           disabled={loan === 0}
           bg={loan === 0 ? "muted.500" : "primary.600"}
           rightIcon={<Icon as={<MaterialIcons name="arrow-forward" />} />}

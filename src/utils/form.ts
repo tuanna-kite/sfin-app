@@ -28,9 +28,9 @@ export const changePasswordSchema = object({
 });
 
 export const loanRequestSchema = object({
-  purpose : string().required("Bạn phải điền mục đích vay"),
-  fullName : string().required("Bạn phải điền đầy tên"),
-  momoAccount: string().min(8, "Số điện thoại không hợp lệ").required("Bạn phải điền số điện thoại tài khoản Momo")
+  reason : string().required("Bạn phải điền mục đích vay"),
+  fullname : string().required("Bạn phải điền đầy đủ tên"),
+  momo: string().min(8, "Số điện thoại không hợp lệ").required("Bạn phải điền số điện thoại tài khoản Momo")
 })
 
 export function onInputChange<FieldType>(

@@ -1,15 +1,7 @@
 import { Alert, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import HeaderBackground from "../../../components/ui/HeaderBackground";
-import {
-  Button,
-  Center,
-  Column,
-  IconButton,
-  Image,
-  Pressable,
-  Text,
-} from "native-base";
+import { Button, Center, Column, IconButton, Image, Pressable, Text } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParams } from "../../../navigations/config";
@@ -27,25 +19,18 @@ import { firebaseDb, firebaseStorage } from "../../../firebase";
 import { setUser } from "../../../store/user.reducer";
 import LoadingOverlay from "../../../components/LoadingOverlay";
 
-type Props = {} & NativeStackScreenProps<
-  RootStackParams,
-  "ProfileVerification"
->;
+type Props = {} & NativeStackScreenProps<RootStackParams, "ProfileVerification">;
 
-const ProfileVerification = ({ navigation, route }: Props) => {
+const ProfileVerification = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const { popup } = useAppSelector((state) => state.popup);
   const { user } = useAppSelector((state) => state.user);
-
-  const request = route.params.onPaymentRequest;
 
   const pickFrontIdImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.2,
-      orderedSelection: true,
-      selectionLimit: 2,
     });
     if (!result.canceled) {
       try {
@@ -82,8 +67,6 @@ const ProfileVerification = ({ navigation, route }: Props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.2,
-      orderedSelection: true,
-      selectionLimit: 2,
     });
     if (!result.canceled) {
       try {
@@ -186,7 +169,7 @@ const ProfileVerification = ({ navigation, route }: Props) => {
 
   async function updateVerified() {
     await updateDoc(doc(firebaseDb, "users", user!.phone), {
-      verified:true,
+      verified: true,
     });
     dispatch(
       setUser({
@@ -202,17 +185,21 @@ const ProfileVerification = ({ navigation, route }: Props) => {
     }
   }
 
-  function onConfirm() {
-    if (!request) {
+  async function onConfirm() {
+    try {
+      dispatch(setLoading());
+      await updateVerified();
       dispatch(
-        setPopup({
-          type: EPopupType.Success,
-          title: "Yêu cầu của bạn đã được gửi đi",
-          desc: "Chúng tôi sẽ kiểm tra trong 48h làm việc",
+        setUser({
+          ...user!,
+          verified: true,
         })
       );
-    } else {
-      navigation.navigate("LoanRequest", { loan: route.params.loan });
+      navigation.navigate("Home");
+    } catch (err) {
+      Alert.alert("Thông báo", "Gửi yêu cầu thất bại, hãy thử lại!");
+    } finally {
+      dispatch(removeLoading());
     }
   }
   const [page, setPage] = useState(1);
@@ -223,7 +210,6 @@ const ProfileVerification = ({ navigation, route }: Props) => {
       {popup && (
         <SuccessPopup
           onCancel={() => {
-            updateVerified();
             navigation.navigate("Home");
           }}
         />
@@ -234,41 +220,22 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Hình ảnh CCCD
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Chúng tôi cần biết bạn là ai để xác minh danh tính. Vui lòng cung
-            cấp hình ảnh trong điều kiện đầy đủ ánh sáng để hệ thống quét thông
-            tin được chính xác.
+            Chúng tôi cần biết bạn là ai để xác minh danh tính. Vui lòng cung cấp hình ảnh trong
+            điều kiện đầy đủ ánh sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Center>
             <Pressable onPress={pickFrontIdImage}>
               {!user?.frontIdUrl ? (
-                <Image
-                  mt={3}
-                  alt=""
-                  source={require("../../../../assets/take-pic.png")}
-                />
+                <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
               ) : (
-                <Image
-                  mt={3}
-                  alt=""
-                  size={"2xl"}
-                  source={{ uri: user!.frontIdUrl }}
-                />
+                <Image mt={3} alt="" size={"2xl"} source={{ uri: user!.frontIdUrl }} />
               )}
             </Pressable>
             <Pressable onPress={pickBackIdImage}>
               {!user?.backIdUrl ? (
-                <Image
-                  mt={3}
-                  alt=""
-                  source={require("../../../../assets/take-pic.png")}
-                />
+                <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
               ) : (
-                <Image
-                  mt={3}
-                  alt=""
-                  size={"2xl"}
-                  source={{ uri: user!.backIdUrl }}
-                />
+                <Image mt={3} alt="" size={"2xl"} source={{ uri: user!.backIdUrl }} />
               )}
             </Pressable>
           </Center>
@@ -283,25 +250,16 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Ảnh cá nhân kèm CCCD
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Vui lòng cung cấp hình ảnh cá nhân kèm ảnh CCCD trước ngực trong
-            điều kiện đầy đủ ánh sáng để hệ thống quét thông tin được chính xác.
+            Vui lòng cung cấp hình ảnh cá nhân kèm ảnh CCCD trước ngực trong điều kiện đầy đủ ánh
+            sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Column flex={1} justifyContent="space-between">
             <Center>
               <Pressable onPress={pickPersonalImage}>
                 {!user?.frontPersonalUrl ? (
-                  <Image
-                    mt={3}
-                    alt=""
-                    source={require("../../../../assets/take-pic.png")}
-                  />
+                  <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
                 ) : (
-                  <Image
-                    mt={3}
-                    alt=""
-                    size={"2xl"}
-                    source={{ uri: user!.frontPersonalUrl }}
-                  />
+                  <Image mt={3} alt="" size={"2xl"} source={{ uri: user!.frontPersonalUrl }} />
                 )}
               </Pressable>
             </Center>
@@ -317,26 +275,16 @@ const ProfileVerification = ({ navigation, route }: Props) => {
             Hình ảnh bảng điểm
           </Text>
           <Text fontSize={10} color="#6B7280" px={10} textAlign={"center"}>
-            Vui lòng cung cấp hình ảnh bảng điểm có xác nhận của nhà trường
-            trong điều kiện đầy dủ ánh sáng để hệ thống quét thông tin được
-            chính xác.
+            Vui lòng cung cấp hình ảnh bảng điểm có xác nhận của nhà trường trong điều kiện đầy dủ
+            ánh sáng để hệ thống quét thông tin được chính xác.
           </Text>
           <Column flex={1} justifyContent={"space-between"}>
             <Center>
               <Pressable onPress={pickSchoolRecord}>
                 {!user?.schoolRecordUrl ? (
-                  <Image
-                    mt={3}
-                    alt=""
-                    source={require("../../../../assets/take-pic.png")}
-                  />
+                  <Image mt={3} alt="" source={require("../../../../assets/take-pic.png")} />
                 ) : (
-                  <Image
-                    mt={3}
-                    alt=""
-                    size={"2xl"}
-                    source={{ uri: user!.schoolRecordUrl }}
-                  />
+                  <Image mt={3} alt="" size={"2xl"} source={{ uri: user!.schoolRecordUrl }} />
                 )}
               </Pressable>
             </Center>

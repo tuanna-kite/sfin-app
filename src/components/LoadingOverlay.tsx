@@ -2,9 +2,9 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { Center, HStack, Heading, Spinner } from "native-base";
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ style }: any) => {
   return (
-    <Center flex={1} style={styles.container}>
+    <Center flex={1} style={[styles.container, style]}>
       <HStack space={2} justifyContent="center">
         <Spinner accessibilityLabel="Loading posts" />
         <Heading color="primary.500" fontSize="md">
@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
 });
